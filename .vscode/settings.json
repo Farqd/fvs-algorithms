@@ -1,0 +1,24 @@
+{
+  "files.associations": {
+    "*.jml": "java",
+    "xlocale": "cpp",
+    "utility": "cpp",
+    "deque": "cpp",
+    "initializer_list": "cpp",
+    "vector": "cpp",
+    "xstring": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "xiosbase": "cpp",
+    "ios": "cpp",
+    "queue": "cpp",
+    "type_traits": "cpp",
+    "ostream": "cpp"
+  },
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  }
+}
