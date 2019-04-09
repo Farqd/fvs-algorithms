@@ -44,7 +44,7 @@ vector<int> util::FindCycle(Graph const& graph, set<int> const& banned)
   vector<bool> visited(graph.size(), false);
   vector<int> cycle;
 
-  for(int i = 0; i < graph.size(); i++)
+  for(int i = 0; i < (int)graph.size(); i++)
   {
     if(!banned.count(i) && !visited[i])
     {
@@ -67,7 +67,7 @@ bool util::IsFvs(Graph const& graph, set<int> const& fvs)
 
 void util::PrintGraph(Graph const& graph)
 {
-  for(int i=0; i<graph.size(); i++)
+  for(int i=0; i< (int)graph.size(); i++)
   {
     cout << i << ": ";
     for(int x : graph[i])

@@ -1,0 +1,18 @@
+cxx_test(
+  name = 'test',
+  srcs = [
+    'interval_test.cpp',
+  ],
+  deps = [
+    '//third_party/googletest:gtest',
+    '//:fvs-algorithms',
+  ],
+  compiler_flags = [
+    '-std=c++17',
+    '-Wall',
+    '-pthread',
+  ],
+  linker_flags = [
+    '-pthread',
+  ],
+)

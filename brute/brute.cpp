@@ -1,11 +1,10 @@
-#pragma once
-
-#include "../util/util.h"
+#include "brute/brute.h"
+#include "util/util.h"
 
 #include <set>
 #include <optional>
 
-namespace{
+namespace {
 
   int BruteFvsRec(Graph const& graph, set<int>& banned)
   {
@@ -27,22 +26,22 @@ namespace{
 }
 
 // Search a cycle, remove one vertex => recursive call
-int BruteCycleSearch(Graph const& graph)
+int brute::CycleSearch(Graph const& graph)
 {
   set<int> banned;
   return BruteFvsRec(graph, banned);
 }
 
 // For each subset of vertices check if it is a proper FVS
-int BruteEverySubset(Graph const& graph)
+int brute::EverySubset(Graph const& graph)
 {
   assert(graph.size() <= 20);
-  int best_result = graph.size();
+  unsigned best_result = graph.size();
   
   for(int i=0; i < (1 << graph.size()); i++)
   {
     set<int> fvs;
-    for(int j=0; j < graph.size(); j++)
+    for(unsigned int j=0; j < graph.size(); j++)
       if( (i>>j) & 1 )
         fvs.insert(j);
     if(fvs.size() >= best_result)
@@ -53,4 +52,3 @@ int BruteEverySubset(Graph const& graph)
 
   return best_result;
 }
-
