@@ -1,6 +1,17 @@
 # fvs-algorithms
 
+# Google Test
+I use gtest as git submodule `third_party/googletest`, you can pull it when cloning  
+```bash
+git clone --recursive URL
+```  
+or after cloning by executing 
+```bash
+git submodule init
+git submodule update
+```
 
+# Buck
 
 Before building you need to install buck  
 https://buckbuild.com/  
