@@ -15,7 +15,6 @@ TEST(IntervalTest, TestSize5) {
     auto const& graph = interval::IntervalGraphToGraph(ivGraph);
     int fvs_brute = brute::CycleSearch(graph);
     
-    // cerr << iv_res << " " << fvs_brute << endl;
     EXPECT_EQ(fvs_brute, iv_res);
   }
 }

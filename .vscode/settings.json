@@ -17,7 +17,10 @@
     "algorithm": "cpp",
     "unordered_set": "cpp",
     "xhash": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "set": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,

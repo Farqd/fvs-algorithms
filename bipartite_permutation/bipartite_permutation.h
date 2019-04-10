@@ -20,7 +20,7 @@ namespace bipartite_permutation {
     vector<int> right;
 
     int n;
-    int isolated;
+    vector<int> isolated;
     Graph const graph;
     vector<unordered_set<int>> edges_map;
     vector<pair<int, int> > edges;
@@ -40,7 +40,14 @@ namespace bipartite_permutation {
 
     int A2(int i, int j);
 
-    int CalculateFVS();
+    int FvsCount();
+
+    unordered_set<int> Fvs();
+    void RecoverResultA(int i, int j, unordered_set<int> & result);
+    void RecoverResultB(int i, int j, unordered_set<int> & result);
+    void RecoverResultC(int i, int j, unordered_set<int> & result);
+    void RecoverResultD(int i, int j, unordered_set<int> & result);
+
   };
 
 

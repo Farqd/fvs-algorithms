@@ -4,7 +4,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <set>
+#include <unordered_set>
 #include <map>
 #include <cassert>
 
@@ -12,7 +12,8 @@ using namespace std;
 
 namespace 
 {
-  bool FindCycleDfs(int k, int parent, Graph const& graph, set<int> const& banned, vector<bool>& visited, vector<int>& cycle)
+  bool FindCycleDfs(int k, int parent, Graph const& graph,
+      unordered_set<int> const& banned, vector<bool>& visited, vector<int>& cycle)
   {
     if(visited[k])
     {
@@ -39,7 +40,7 @@ namespace
   }
 }
 
-vector<int> util::FindCycle(Graph const& graph, set<int> const& banned)
+vector<int> util::FindCycle(Graph const& graph, unordered_set<int> const& banned)
 {
   vector<bool> visited(graph.size(), false);
   vector<int> cycle;
@@ -57,7 +58,7 @@ vector<int> util::FindCycle(Graph const& graph, set<int> const& banned)
   return cycle;
 }
 
-bool util::IsFvs(Graph const& graph, set<int> const& fvs)
+bool util::IsFvs(Graph const& graph, unordered_set<int> const& fvs)
 {
   vector<int> const& cycle = FindCycle(graph, fvs);
   if(cycle.size() == 0)

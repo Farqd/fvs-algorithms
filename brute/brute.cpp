@@ -1,12 +1,12 @@
 #include "brute/brute.h"
 #include "util/util.h"
 
-#include <set>
+#include <unordered_set>
 #include <optional>
 
 namespace {
 
-  int BruteFvsRec(Graph const& graph, set<int>& banned)
+  int BruteFvsRec(Graph const& graph, unordered_set<int>& banned)
   {
     vector<int> cycle = util::FindCycle(graph, banned);
     if(cycle.size() == 0)
@@ -28,7 +28,7 @@ namespace {
 // Search a cycle, remove one vertex => recursive call
 int brute::CycleSearch(Graph const& graph)
 {
-  set<int> banned;
+  unordered_set<int> banned;
   return BruteFvsRec(graph, banned);
 }
 
@@ -40,7 +40,7 @@ int brute::EverySubset(Graph const& graph)
   
   for(int i=0; i < (1 << graph.size()); i++)
   {
-    set<int> fvs;
+    unordered_set<int> fvs;
     for(unsigned int j=0; j < graph.size(); j++)
       if( (i>>j) & 1 )
         fvs.insert(j);

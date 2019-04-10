@@ -3,7 +3,6 @@
 
 #include "bipartite_permutation/bipartite_permutation.h"
 
-
 using namespace std;
 using namespace permutation_graphs;
 
@@ -81,19 +80,17 @@ namespace bipartite_permutation {
       for(int x : graph[i])
         edges_map[i].insert(x);
 
-    isolated = 0;
-
     for(int x : sides.first)
       if(edges_map[x].size() > 0)
         left.push_back(x);
       else
-        isolated++;
+        isolated.push_back(x);
       
     for(int x : sides.second)
       if(edges_map[x].size() > 0)
         right.push_back(x);
       else
-        isolated++;
+        isolated.push_back(x);
     
     // left.insert(left.end(), sides.first.begin(), sides.first.end());
     // right.insert(right.end(), sides.second.begin(), sides.second.end());
@@ -146,11 +143,6 @@ namespace bipartite_permutation {
       }
     }
 
-      // cerr << endl;
-      // util::PrintVector(l);
-      // util::PrintVector(r);
-      // cerr << endl;
-
   }
 
   int BipartiteGraph::A2(int i, int j)
@@ -164,31 +156,16 @@ namespace bipartite_permutation {
     if(E(left[i], right[j]))
       return A[i][j];
 
-// cerr << "FRANE " << i << " " << j << " " << r[left[i]] << " " << r[right[j]] << endl;
     if(r[left[i]] < j)
       return A[i][r[left[i]]] + j - (r[left[i]] + 1) + 1;
-    // cerr << "DALEJ" << endl;
     if(r[right[j]] < i)
       return A[r[right[j]]][j] + i - (r[right[j]]+1) + 1;
     
 
-    // cerr << "PERMUTAION" << endl;
-    // util::PrintVector(permutation_);
-
-    // cerr << "LEFT" << endl;
-    // util::PrintVector(left);
-
-    // cerr << "RIGHT" << endl;
-    // util::PrintVector(right);
-    
-    // cerr << endl;
-    // util::PrintGraph(graph);
-    // cerr << endl;
-    // cerr << i <<  " " << j << endl;
     assert(false);
   }
 
-  int BipartiteGraph::CalculateFVS()
+  int BipartiteGraph::FvsCount()
   {
     int l_size = left.size(); int r_size = right.size();
 
@@ -204,22 +181,13 @@ namespace bipartite_permutation {
     resize_matrix_fun(D);
 
     CalculateLAndR();
-      // for(int i=0; i<7; i++)
-      // cerr << "l: " << i << " " << l[i] << endl;
+
     // ALGO
     // we want to calculate dp in order where (x, y) is calculated before (x2, y2) if x + y < x2 + y2
     for(auto const& edge : edges)
     {
       int i = edge.first;
       int j = edge.second;
-
-      // cerr << "I J: ";
-      // cerr << i << " " << j << endl;
-
-      // int xi = left[i];
-      // int yj = right[j];
-
-      // cerr << "xi yj " << xi << " " << yj << endl;
       
       int i1 = i - 1;
       int j1 = j - 1;
@@ -235,20 +203,12 @@ namespace bipartite_permutation {
       else 
       {
         int tmp = max( { A2(i2,j2) + 2, C[i1][j] + 1, D[i1][j2] + 2 } );
-        // if(i==4 && j==3)
-        //   cerr << "HURRA " << tmp << endl;
         if(E(left[i2], right[j2]) && l[left[i1]] == j2)
           C[i][j] = max(tmp, B[i2][j2] + 3);
         else
           C[i][j] = tmp;
       }
-      // if(i == 4 && j == 3)
-      // {
-      //   cerr << C[i][j] << endl;
-      //   cerr << i1 << " " << j1 << endl;
-      //   cerr << i2 << " " << j2 << endl;
-      //   cerr << l[right[j]] << endl;
-      // }
+
       // D
 
       if(j1 <= l[left[i]])
@@ -269,25 +229,209 @@ namespace bipartite_permutation {
 
     }
 
-    // cerr << endl;
-    // for(int i=0; i<l_size; i++)
-    // for(int j=0; j<r_size; j++)
-    //   cerr << i << " " << j << " " << A2(i, j) << endl;
+    return n - A[left.size()-1][right.size()-1] - isolated.size();
+  }
 
-    // cerr << "C[4][3] = " << C[4][3] << endl;
-    // cerr << "D[4][3] = " << D[4][3] << endl;
+
+  void BipartiteGraph::RecoverResultA(int i, int j, unordered_set<int> & result)
+  {
     
-    // cerr << "B[4][3] = " << B[4][3] << endl;
-    // cerr << endl;
-    // for(int i=0; i<3; i++)
-    // for(int j=0; j<3; j++)
-    //   cerr << "C " << i << " " << j << " " << C[i][j] << endl;
+    auto lamAddRight = [&](int beg) {
+      for(int k = beg; k <= j; k++)
+        result.insert(right[k]);
+    };
 
-    
+    auto lamAddLeft = [&](int beg) {
+      for(int k = beg; k <= i; k++)
+        result.insert(left[k]);
+    };
 
+    if(i == 0)
+    {
+      lamAddRight(1);
+      return;
+    }
+
+    if(j == 0)
+    {
+      lamAddLeft(1);
+      return;
+    }
+    // A2
+    if(!E(left[i], right[j]))
+    {
+      if(r[left[i]] < j)
+      {
+        lamAddRight(r[left[i]]+1);
+        return RecoverResultA(i, r[left[i]], result);
+      }
+
+      assert(r[right[j]] < i);
+      lamAddLeft(r[right[j]]+1);
+      return RecoverResultA(r[right[j]], j, result);
+    }
+
+    // We have edge {i, j}
+    if(A[i][j] == B[i][j])
+      return RecoverResultB(i, j, result);
+    if(A[i][j] == A2(i-1, j))
+      return RecoverResultA(i-1, j, result);
+    if(A[i][j] == A2(i, j-1))
+      return RecoverResultA(i, j-1, result);
+
+    assert(false);
+  }
+
+  void BipartiteGraph::RecoverResultB(int i, int j, unordered_set<int> & result)
+  {
+    if(B[i][j] == C[i][j])
+      return RecoverResultC(i, j, result);
+    if(B[i][j] == D[i][j])
+      return RecoverResultD(i, j, result);
+
+    assert(false);
+  }
+
+  void BipartiteGraph::RecoverResultC(int i, int j, unordered_set<int> & result)
+  {
+    int i1 = i - 1;
+    int j1 = j - 1;
+
+    int i2 = l[right[j]] - 1;
+    int j2 = l[left[i]] - 1;
+
+    if(i1 <= l[right[j]])
+    {
+      result.insert(left[i]);
+      result.insert(right[j]);
       
-    // cerr << endl;
-    return n - A[left.size()-1][right.size()-1] - isolated;
+      return RecoverResultA(i1, j2, result);
+    }
+    else if(! E(left[i1], right[j2] ))
+    {
+      result.insert(left[i]);
+      return RecoverResultC(i1, j, result);
+    }
+    else 
+    {
+      int res = C[i][j];
+      if(res == A2(i2, j2) + 2)
+      {
+        result.insert(left[i]);
+        result.insert(right[j]);
+        return RecoverResultA(i2, j2, result);
+      }
+
+      if(res == C[i1][j] + 1)
+      {
+        result.insert(left[i]);
+        return RecoverResultC(i1, j, result);
+      }
+
+      if(res == D[i1][j2] + 2)
+      {
+        result.insert(left[i]);
+        result.insert(right[j]);
+        return RecoverResultD(i1, j2, result);
+      }
+
+      assert(res == B[i2][j2] + 3);
+
+      result.insert(left[i]);
+      result.insert(right[j]);
+      result.insert(left[i1]);
+      return RecoverResultB(i2, j2, result);
+    }
+  }
+
+  void BipartiteGraph::RecoverResultD(int i, int j, unordered_set<int> & result)
+  {
+    int i1 = i - 1;
+    int j1 = j - 1;
+
+    int i2 = l[right[j]] - 1;
+    int j2 = l[left[i]] - 1;
+
+    if(j1 <= l[left[i]])
+    {
+      result.insert(left[i]);
+      result.insert(right[j]);
+      
+      return RecoverResultA(i2, j1, result);
+    }
+    else if(! E(left[i2], right[j1] ))
+    {
+      result.insert(right[j]);
+      return RecoverResultD(i, j1, result);
+    }
+    else 
+    {
+      int res = D[i][j];
+      if(res == A2(i2, j2) + 2)
+      {
+        result.insert(left[i]);
+        result.insert(right[j]);
+        return RecoverResultA(i2, j2, result);
+      }
+
+      if(res == C[i2][j1] + 2)
+      {
+        result.insert(left[i]);
+        result.insert(right[j]);
+        return RecoverResultC(i2, j1, result);
+      }
+
+      if(res == D[i][j1] + 1)
+      {
+        result.insert(right[j]);
+        return RecoverResultD(i, j1, result);
+      }
+
+      assert(res == B[i2][j2] + 3);
+
+      result.insert(left[i]);
+      result.insert(right[j]);
+      result.insert(right[j1]);
+      return RecoverResultB(i2, j2, result);
+    }
+  }
+
+  
+
+  unordered_set<int> BipartiteGraph::Fvs()
+  {
+
+    unordered_set<int> result;
+    for(int i=0; i<n; i++) result.insert(i);
+    unordered_set<int> mcfs;
+
+        int size = FvsCount();
+    for(int x : isolated)
+      result.erase(x);
+
+    RecoverResultA(left.size()-1, right.size()-1, mcfs);
+
+    for(int x : mcfs)
+      result.erase(x);
+
+    if(result.size() != size)
+    {
+      cerr << "got: " << result.size() << " expected: " << size << endl;
+      cerr << mcfs.size() << " " << isolated.size() << endl;
+      
+      cerr << "PERMUTATION " << endl;
+      util::PrintVector(permutation_);
+      cerr << "ISOLATION " << endl;
+      util::PrintVector(isolated);
+      
+
+      for(int x : result)
+        cerr << x << " ";
+      cerr << endl;
+      }
+    // cerr << "SIZEEEEE: " << result.size() << endl;
+    assert(result.size() == size);
+    return result;
   }
 
 }

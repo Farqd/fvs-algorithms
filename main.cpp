@@ -6,7 +6,7 @@ using namespace bipartite_permutation;
 bool cycle3(Graph const& graph)
 {
     
-    for(int i=0;i<graph.size(); i++)
+    for(int i=0;i< (int)graph.size(); i++)
     for(int x : graph[i])
     for(int y : graph[x])
     for(int z : graph[y])
@@ -18,64 +18,63 @@ int main()
 {
 
 {
-    // vector<int> p {2, 0, 1};
-    // vector<int> p {1, 0, 3, 4, 2};
-    // vector<int> p {2,4,5,0,6,1,3}; // 2
-    vector<int> p {3,4,0,6,1,2,5}; // 2
-      BipartiteGraph gr {p};
-      int fvs = gr.CalculateFVS();
-      int actual_fvs = brute::EverySubset(gr.graph);
-    //   cerr << fvs << " " << actual_fvs << endl;
-      assert(fvs == actual_fvs);
+    // // vector<int> p {2, 0, 1};
+    // vector<int> p {2, 3, 0, 1};
+    // // vector<int> p {1, 0, 3, 4, 2};
+    // // vector<int> p {2,4,5,0,6,1,3}; // 2
+    // // vector<int> p {3,4,0,6,1,2,5}; // 2
+    // //   vector<int> p{8, 0, 1, 2, 9, 3, 10, 12, 4, 5, 6, 14, 15, 7, 11, 13};
+
+    //   BipartiteGraph gr {p};
+    //   int fvs = gr.FvsCount();
+    //   unordered_set<int> F = gr.Fvs();
+    //   for(int x : F) cerr << x << " ";
+    //   cerr << endl;
+    //   assert(util::IsFvs(gr.graph, F));
+    //   int actual_fvs = brute::EverySubset(gr.graph);
+    // //   cerr << fvs << " " << actual_fvs << endl;
+    //   assert(fvs == actual_fvs);
     //   return 0;
 }
     // return 0;
-//   auto perms = AllPermutations(11);
+//   auto perms = AllPermutations(12);
 //   cerr << perms.size() << endl;
 
-int ix = 0;
+// int ix = 0;
 vector<int> x;
-for(int i=0; i<14; i++)
+for(int i=0; i<16; i++)
 x.push_back(i);
-int ix0 = 0;
+// int ix0 = 0;
+
 //   for(auto const& x : perms)
 while(true)
   {
       random_shuffle(x.begin(), x.end());
     try {
       BipartiteGraph gr{x};
-        ++ix0;
-        if(ix0 == 1000) break;
-      int fvs = gr.CalculateFVS();
-    //   cerr << fvs << endl;
+       
+    //    cerr << "permutation" << endl;
+    //    for(int y : x)
+    //    cerr << y <<" ";
+    //    cerr << endl;
 
-      int actual_fvs = brute::EverySubset(gr.graph);
-    // assert(fvs == actual_fvs);
-    cerr << "RESULTS " << actual_fvs << " " << fvs << endl;
-
-      if(actual_fvs != fvs)
+      int fvs = gr.FvsCount();
+      auto F = gr.Fvs();
+        cerr << "A";
+      if(!util::IsFvs(gr.graph, F))
       {
-            cerr << "PERMUTAION" << endl;
-            util::PrintVector(x);
+          util::PrintGraph(gr.graph);
+          cerr << endl;
+          util::PrintVector(x);
+          cerr << endl;
 
-            cerr << "LEFT" << endl;
-            util::PrintVector(gr.left);
-
-            cerr << "RIGHT" << endl;
-            util::PrintVector(gr.right);
-
-            cerr << "graph" << endl;
-            util::PrintGraph(gr.graph);
-
-            throw "AA";
-            
+          for(int x : F)
+          cerr << x << " ";
+          cerr << endl;
+          throw("AAAA");
       }
 
     } catch(GraphIsNotBipartiteExpcetion const& exception)
-    {
-        ++ix;
-    //   cerr << "Not BP" << endl;
-    }
+    { }
   }
-  cerr << ix0 << " " << ix << endl;
 }
