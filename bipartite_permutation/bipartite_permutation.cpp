@@ -22,8 +22,6 @@ namespace bipartite_permutation {
         
         if(side[x] != (side[vertex] ^ 3))
         {
-          // cerr << vertex << " " << x << endl;
-          // cerr << side[x] << " " << side[vertex] << endl;
           throw GraphIsNotBipartiteExpcetion(); 
         }
       }
@@ -62,10 +60,11 @@ namespace bipartite_permutation {
   }
 
     // Generate Bipartite Permutaiton graph, left & right are ordered using Strong Ordering
-  BipartiteGraph::BipartiteGraph(vector<int> const& permutation) : graph(PermutationToGraph(permutation))
+  BipartiteGraph::BipartiteGraph(vector<int> const& permutation) 
+  : graph(PermutationToGraph(permutation))
   {      
+    // Save for debug
     permutation_ = permutation;
-    // util::PrintGraph(graph);
 
     pair<vector<int>, vector<int>> sides = BipartiteDivide(graph);
 
@@ -92,10 +91,6 @@ namespace bipartite_permutation {
       else
         isolated.push_back(x);
     
-    // left.insert(left.end(), sides.first.begin(), sides.first.end());
-    // right.insert(right.end(), sides.second.begin(), sides.second.end());
-
-
     for(int sum = 0; sum < (int)left.size() + (int)right.size(); sum++)
     {
       int up = min<int>(sum + 1, left.size());
@@ -151,7 +146,7 @@ namespace bipartite_permutation {
       return 0;
     if(i == 0)
       return j;
-    if(j==0)
+    if(j == 0)
       return i;
     if(E(left[i], right[j]))
       return A[i][j];
@@ -182,7 +177,6 @@ namespace bipartite_permutation {
 
     CalculateLAndR();
 
-    // ALGO
     // we want to calculate dp in order where (x, y) is calculated before (x2, y2) if x + y < x2 + y2
     for(auto const& edge : edges)
     {
@@ -271,7 +265,8 @@ namespace bipartite_permutation {
       return RecoverResultA(r[right[j]], j, result);
     }
 
-    // We have edge {i, j}
+    // Case when {i, j} is an edge
+
     if(A[i][j] == B[i][j])
       return RecoverResultB(i, j, result);
     if(A[i][j] == A2(i-1, j))
@@ -295,21 +290,18 @@ namespace bipartite_permutation {
   void BipartiteGraph::RecoverResultC(int i, int j, unordered_set<int> & result)
   {
     int i1 = i - 1;
-    int j1 = j - 1;
-
     int i2 = l[right[j]] - 1;
     int j2 = l[left[i]] - 1;
 
+    result.insert(left[i]);
+
     if(i1 <= l[right[j]])
     {
-      result.insert(left[i]);
       result.insert(right[j]);
-      
       return RecoverResultA(i1, j2, result);
     }
     else if(! E(left[i1], right[j2] ))
     {
-      result.insert(left[i]);
       return RecoverResultC(i1, j, result);
     }
     else 
@@ -317,27 +309,23 @@ namespace bipartite_permutation {
       int res = C[i][j];
       if(res == A2(i2, j2) + 2)
       {
-        result.insert(left[i]);
         result.insert(right[j]);
         return RecoverResultA(i2, j2, result);
       }
 
       if(res == C[i1][j] + 1)
       {
-        result.insert(left[i]);
         return RecoverResultC(i1, j, result);
       }
 
       if(res == D[i1][j2] + 2)
       {
-        result.insert(left[i]);
         result.insert(right[j]);
         return RecoverResultD(i1, j2, result);
       }
 
       assert(res == B[i2][j2] + 3);
 
-      result.insert(left[i]);
       result.insert(right[j]);
       result.insert(left[i1]);
       return RecoverResultB(i2, j2, result);
@@ -346,22 +334,19 @@ namespace bipartite_permutation {
 
   void BipartiteGraph::RecoverResultD(int i, int j, unordered_set<int> & result)
   {
-    int i1 = i - 1;
     int j1 = j - 1;
-
     int i2 = l[right[j]] - 1;
     int j2 = l[left[i]] - 1;
+
+    result.insert(right[j]);
 
     if(j1 <= l[left[i]])
     {
       result.insert(left[i]);
-      result.insert(right[j]);
-      
       return RecoverResultA(i2, j1, result);
     }
     else if(! E(left[i2], right[j1] ))
     {
-      result.insert(right[j]);
       return RecoverResultD(i, j1, result);
     }
     else 
@@ -370,39 +355,33 @@ namespace bipartite_permutation {
       if(res == A2(i2, j2) + 2)
       {
         result.insert(left[i]);
-        result.insert(right[j]);
         return RecoverResultA(i2, j2, result);
       }
 
       if(res == C[i2][j1] + 2)
       {
         result.insert(left[i]);
-        result.insert(right[j]);
         return RecoverResultC(i2, j1, result);
       }
 
       if(res == D[i][j1] + 1)
       {
-        result.insert(right[j]);
         return RecoverResultD(i, j1, result);
       }
 
       assert(res == B[i2][j2] + 3);
 
       result.insert(left[i]);
-      result.insert(right[j]);
       result.insert(right[j1]);
       return RecoverResultB(i2, j2, result);
     }
   }
 
-  
-
   unordered_set<int> BipartiteGraph::Fvs()
   {
-
     unordered_set<int> result;
-    for(int i=0; i<n; i++) result.insert(i);
+    for(int i=0; i<n; i++) 
+      result.insert(i);
     unordered_set<int> mcfs;
 
         int size = FvsCount();
@@ -414,24 +393,7 @@ namespace bipartite_permutation {
     for(int x : mcfs)
       result.erase(x);
 
-    if(result.size() != size)
-    {
-      cerr << "got: " << result.size() << " expected: " << size << endl;
-      cerr << mcfs.size() << " " << isolated.size() << endl;
-      
-      cerr << "PERMUTATION " << endl;
-      util::PrintVector(permutation_);
-      cerr << "ISOLATION " << endl;
-      util::PrintVector(isolated);
-      
-
-      for(int x : result)
-        cerr << x << " ";
-      cerr << endl;
-      }
-    // cerr << "SIZEEEEE: " << result.size() << endl;
-    assert(result.size() == size);
+    assert((int)result.size() == size);
     return result;
   }
-
 }

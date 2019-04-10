@@ -29,6 +29,7 @@ namespace bipartite_permutation {
     bool E(int x, int y);
 
     // Generate Bipartite Permutaiton graph, left & right are ordered using Strong Ordering
+    // ThrowsGraphIsNotBipartiteExpcetion if graph is not bipartite
     BipartiteGraph(vector<int> const& permutation);
 
     // As defined in paper

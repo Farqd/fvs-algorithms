@@ -27,18 +27,63 @@ Graph permutation_graphs::PermutationToGraph(vector<int> const& permutation)
 {
   Graph result;
 
-  int const n = permutation.size();
-  result.resize(n);
+  result.resize(permutation.size());
+  auto const& edges = permutation_graphs::CalculateEdges(permutation);
 
-  for(int i = 0; i < n; i++)
-  for(int j = i+1; j < n; j++)
-  {
-    if(permutation[i] > permutation[j])
-    {
-      result[permutation[i]].push_back(permutation[j]);
-      result[permutation[j]].push_back(permutation[i]);
-    }
-  }
+  for(auto const& p : edges)
+    result[p.first].push_back(p.second);
 
   return result;
 }
+
+namespace
+{
+  void MergeSort(vector<int> & tab, int beg, int end, vector<pair<int, int> > & edges)
+  {
+    if(beg + 1 == end)
+      return;
+    int mid = (beg + end) / 2;
+    MergeSort(tab, beg, mid, edges);
+    MergeSort(tab, mid, end, edges);
+
+    vector<int> tmp;
+    int l = beg;
+    int r = mid;
+
+    while(l < mid && r < end)
+    {
+      if(tab[l] < tab[r])
+      {
+        tmp.push_back(tab[l++]);
+      } else
+      {
+        for(int k = l; k < mid; k++)
+        {
+          edges.push_back({tab[r], tab[k]});
+          edges.push_back({tab[k], tab[r]});
+        }
+
+        tmp.push_back(tab[r++]);
+      }
+      
+    }
+
+    while(l < mid)
+      tmp.push_back(tab[l++]);
+    while(r < end)
+      tmp.push_back(tab[r++]);
+
+    for(int i=0; i<tmp.size(); i++)
+      tab[beg+i] = tmp[i];
+  }
+}
+
+vector<pair<int, int> > permutation_graphs::CalculateEdges(vector<int> permutation)
+{
+  vector<pair<int, int> > result;
+
+  MergeSort(permutation, 0, permutation.size(), result);
+
+  return result;
+}
+

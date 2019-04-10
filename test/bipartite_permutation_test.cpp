@@ -35,6 +35,7 @@ TEST(BipartitePermutation, BiggerTest1)
 {
   vector<int> v{8, 0, 1, 2, 9, 3, 10, 12, 4, 5, 6, 14, 15, 7, 11, 13};
   BipartiteGraph bg {v};
+  EXPECT_EQ(4, bg.FvsCount());
   EXPECT_TRUE(util::IsFvs(bg.graph, bg.Fvs()));
 }
 
@@ -42,6 +43,7 @@ TEST(BipartitePermutation, BiggerTest2)
 {
   vector<int> v{2, 3, 5, 0, 1, 7, 8, 9, 4, 10, 12, 6, 14, 11, 15, 13};
   BipartiteGraph bg {v};
+  EXPECT_EQ(2, bg.FvsCount());
   EXPECT_TRUE(util::IsFvs(bg.graph, bg.Fvs()));
 }
 

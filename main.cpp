@@ -16,7 +16,6 @@ bool cycle3(Graph const& graph)
 
 int main()
 {
-
 {
     // // vector<int> p {2, 0, 1};
     // vector<int> p {2, 3, 0, 1};
@@ -58,9 +57,8 @@ while(true)
     //    cerr << y <<" ";
     //    cerr << endl;
 
-      int fvs = gr.FvsCount();
       auto F = gr.Fvs();
-        cerr << "A";
+        cerr << "A " << gr.FvsCount();
       if(!util::IsFvs(gr.graph, F))
       {
           util::PrintGraph(gr.graph);

@@ -16,4 +16,7 @@ namespace permutation_graphs {
 
   Graph PermutationToGraph(vector<int> const& permutation);
 
+  // Return all edges. Works in O(N*log(N) + E)
+  vector<pair<int, int> > CalculateEdges(vector<int> permutation);
+
 }

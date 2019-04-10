@@ -3,6 +3,7 @@ cxx_test(
   srcs = [
     'interval_test.cpp',
     'bipartite_permutation_test.cpp',
+    'permutation_util_test.cpp',
   ],
   deps = [
     '//third_party:gtest',
