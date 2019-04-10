@@ -3,6 +3,7 @@ all_headers = [
   'brute/brute.h',
   'permutation/util.h',
   'interval/interval.h',
+  'bipartite_permutation/bipartite_permutation.h',
 ]
 
 cxx_library(
@@ -12,7 +13,7 @@ cxx_library(
     'brute/brute.cpp',
     'permutation/util.cpp',
     'interval/interval.cpp',
-    
+    'bipartite_permutation/bipartite_permutation.cpp',
   ],
   headers = all_headers,
   exported_headers = all_headers,

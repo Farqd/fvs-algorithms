@@ -2,9 +2,10 @@ cxx_test(
   name = 'test',
   srcs = [
     'interval_test.cpp',
+    'bipartite_permutation_test.cpp',
   ],
   deps = [
-    '//third_party/googletest:gtest',
+    '//third_party:gtest',
     '//:fvs-algorithms',
   ],
   compiler_flags = [
