@@ -20,10 +20,11 @@ namespace bipartite_permutation {
     vector<int> right;
 
     int n;
+    int isolated;
     Graph const graph;
     vector<unordered_set<int>> edges_map;
     vector<pair<int, int> > edges;
-
+    vector<int> permutation_;
 
     bool E(int x, int y);
 

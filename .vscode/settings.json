@@ -16,7 +16,8 @@
     "ostream": "cpp",
     "algorithm": "cpp",
     "unordered_set": "cpp",
-    "xhash": "cpp"
+    "xhash": "cpp",
+    "iostream": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,

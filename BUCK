@@ -27,5 +27,26 @@ cxx_library(
     '-std=c++17',
     '-Wall',
     '-pthread',
+    '-O3',
+  ],
+)
+
+cxx_binary(
+  name = 'main',
+  srcs = [
+    'main.cpp',
+  ],
+  link_style = 'static',
+  deps = [
+    '//:fvs-algorithms',
+  ],
+  visibility = [
+    'PUBLIC',
+  ],
+  compiler_flags = [
+    '-std=c++17',
+    '-Wall',
+    '-pthread',
+    '-O3',
   ],
 )

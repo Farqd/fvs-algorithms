@@ -23,8 +23,8 @@ namespace bipartite_permutation {
         
         if(side[x] != (side[vertex] ^ 3))
         {
-          cerr << vertex << " " << x << endl;
-          cerr << side[x] << " " << side[vertex] << endl;
+          // cerr << vertex << " " << x << endl;
+          // cerr << side[x] << " " << side[vertex] << endl;
           throw GraphIsNotBipartiteExpcetion(); 
         }
       }
@@ -47,6 +47,11 @@ namespace bipartite_permutation {
         }
       }
 
+      for(unsigned i = 0; i < graph.size(); i++)
+        for(int x : graph[i])
+          if( (side[i] ^ 3) != side[x])
+            throw GraphIsNotBipartiteExpcetion(); 
+
       for(int i=0; i< (int)graph.size(); i++)
         if(side[i] == 1)
           result.first.push_back(i);
@@ -60,6 +65,7 @@ namespace bipartite_permutation {
     // Generate Bipartite Permutaiton graph, left & right are ordered using Strong Ordering
   BipartiteGraph::BipartiteGraph(vector<int> const& permutation) : graph(PermutationToGraph(permutation))
   {      
+    permutation_ = permutation;
     // util::PrintGraph(graph);
 
     pair<vector<int>, vector<int>> sides = BipartiteDivide(graph);
@@ -67,18 +73,32 @@ namespace bipartite_permutation {
     left.push_back(-1);
     right.push_back(-1);
 
-    left.insert(left.end(), sides.first.begin(), sides.first.end());
-    right.insert(right.end(), sides.second.begin(), sides.second.end());
-
     n = graph.size();
 
+    // FIX it works in n^2 now
     edges_map.resize(n);
     for(int i=0; i<n; i++)
       for(int x : graph[i])
         edges_map[i].insert(x);
 
+    isolated = 0;
 
-    // FIX it works in n^2 now
+    for(int x : sides.first)
+      if(edges_map[x].size() > 0)
+        left.push_back(x);
+      else
+        isolated++;
+      
+    for(int x : sides.second)
+      if(edges_map[x].size() > 0)
+        right.push_back(x);
+      else
+        isolated++;
+    
+    // left.insert(left.end(), sides.first.begin(), sides.first.end());
+    // right.insert(right.end(), sides.second.begin(), sides.second.end());
+
+
     for(int sum = 0; sum < (int)left.size() + (int)right.size(); sum++)
     {
       int up = min<int>(sum + 1, left.size());
@@ -137,12 +157,34 @@ namespace bipartite_permutation {
   {
     if(i==0 && j==0)
       return 0;
+    if(i == 0)
+      return j;
+    if(j==0)
+      return i;
     if(E(left[i], right[j]))
       return A[i][j];
+
+// cerr << "FRANE " << i << " " << j << " " << r[left[i]] << " " << r[right[j]] << endl;
     if(r[left[i]] < j)
-      return A[i][r[right[j]]] + j - (r[left[i]] + 1) + 1;
+      return A[i][r[left[i]]] + j - (r[left[i]] + 1) + 1;
+    // cerr << "DALEJ" << endl;
     if(r[right[j]] < i)
       return A[r[right[j]]][j] + i - (r[right[j]]+1) + 1;
+    
+
+    // cerr << "PERMUTAION" << endl;
+    // util::PrintVector(permutation_);
+
+    // cerr << "LEFT" << endl;
+    // util::PrintVector(left);
+
+    // cerr << "RIGHT" << endl;
+    // util::PrintVector(right);
+    
+    // cerr << endl;
+    // util::PrintGraph(graph);
+    // cerr << endl;
+    // cerr << i <<  " " << j << endl;
     assert(false);
   }
 
@@ -162,7 +204,8 @@ namespace bipartite_permutation {
     resize_matrix_fun(D);
 
     CalculateLAndR();
-
+      // for(int i=0; i<7; i++)
+      // cerr << "l: " << i << " " << l[i] << endl;
     // ALGO
     // we want to calculate dp in order where (x, y) is calculated before (x2, y2) if x + y < x2 + y2
     for(auto const& edge : edges)
@@ -170,6 +213,7 @@ namespace bipartite_permutation {
       int i = edge.first;
       int j = edge.second;
 
+      // cerr << "I J: ";
       // cerr << i << " " << j << endl;
 
       // int xi = left[i];
@@ -182,7 +226,6 @@ namespace bipartite_permutation {
 
       int i2 = l[right[j]] - 1;
       int j2 = l[left[i]] - 1;
-
       // C
 
       if(i1 <= l[right[j]])
@@ -191,13 +234,21 @@ namespace bipartite_permutation {
         C[i][j] = C[i1][j] + 1;
       else 
       {
-        int tmp = max( { A2(i2,j1) + 2, C[i1][j] + 1, D[i1][j2] + 2 } );
-        if(E(left[i2], right[j2]) && l[right[j1]] == i2)
+        int tmp = max( { A2(i2,j2) + 2, C[i1][j] + 1, D[i1][j2] + 2 } );
+        // if(i==4 && j==3)
+        //   cerr << "HURRA " << tmp << endl;
+        if(E(left[i2], right[j2]) && l[left[i1]] == j2)
           C[i][j] = max(tmp, B[i2][j2] + 3);
         else
           C[i][j] = tmp;
       }
-
+      // if(i == 4 && j == 3)
+      // {
+      //   cerr << C[i][j] << endl;
+      //   cerr << i1 << " " << j1 << endl;
+      //   cerr << i2 << " " << j2 << endl;
+      //   cerr << l[right[j]] << endl;
+      // }
       // D
 
       if(j1 <= l[left[i]])
@@ -207,8 +258,8 @@ namespace bipartite_permutation {
       else 
       {
         int tmp = max({ A2(i2, j2) + 2, D[i][j1] + 1, C[i2][j1] + 2  });
-        if(E(left[i1], right[j2]) && l[right[j1]] == i2)
-          D[i][j] = max(tmp, B[i1][j2] + 3);
+        if(E(left[i2], right[j2]) && l[right[j1]] == i2)
+          D[i][j] = max(tmp, B[i2][j2] + 3);
         else
           D[i][j] = tmp;
       }
@@ -219,10 +270,14 @@ namespace bipartite_permutation {
     }
 
     // cerr << endl;
-    // for(int i=0; i<3; i++)
-    // for(int j=0; j<3; j++)
-    //   cerr << i << " " << j << " " << A[i][j] << endl;
+    // for(int i=0; i<l_size; i++)
+    // for(int j=0; j<r_size; j++)
+    //   cerr << i << " " << j << " " << A2(i, j) << endl;
 
+    // cerr << "C[4][3] = " << C[4][3] << endl;
+    // cerr << "D[4][3] = " << D[4][3] << endl;
+    
+    // cerr << "B[4][3] = " << B[4][3] << endl;
     // cerr << endl;
     // for(int i=0; i<3; i++)
     // for(int j=0; j<3; j++)
@@ -232,7 +287,7 @@ namespace bipartite_permutation {
 
       
     // cerr << endl;
-    return n - A[left.size()-1][right.size()-1];
+    return n - A[left.size()-1][right.size()-1] - isolated;
   }
 
 }

@@ -78,7 +78,8 @@ void util::PrintGraph(Graph const& graph)
 
 void util::PrintVector(vector<int> const& v)
 {
+  cerr << v.size() << endl;
   for(int x : v)
   cerr << x << " ";
-  cerr << endl;
+  cerr << endl << endl;
 }
