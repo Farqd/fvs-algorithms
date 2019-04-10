@@ -20,7 +20,8 @@
     "iostream": "cpp",
     "array": "cpp",
     "string_view": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "cassert": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,

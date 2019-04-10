@@ -3,6 +3,8 @@
 
 #include "bipartite_permutation/bipartite_permutation.h"
 
+#include <unordered_map>
+
 using namespace std;
 using namespace permutation_graphs;
 
@@ -67,13 +69,12 @@ namespace bipartite_permutation {
     permutation_ = permutation;
 
     pair<vector<int>, vector<int>> sides = BipartiteDivide(graph);
-
+    
     left.push_back(-1);
     right.push_back(-1);
 
     n = graph.size();
 
-    // FIX it works in n^2 now
     edges_map.resize(n);
     for(int i=0; i<n; i++)
       for(int x : graph[i])
@@ -90,23 +91,60 @@ namespace bipartite_permutation {
         right.push_back(x);
       else
         isolated.push_back(x);
+
+    vector<vector<pair<int, int> > > count_sort_tab;
+    count_sort_tab.resize(n+2);
+
+    unordered_map<int, pair<int, bool> > vertex_position;
+
+    for(int i=1; i < left.size(); i++)
+      vertex_position[left[i]] = {i, true};
+    for(int i=1; i < right.size(); i++)
+      vertex_position[right[i]] = {i, false};
     
-    for(int sum = 0; sum < (int)left.size() + (int)right.size(); sum++)
+
+    for(int i=0; i<n; i++)
     {
-      int up = min<int>(sum + 1, left.size());
-      for(int i=0; i < up; i++)
+      auto p = vertex_position[i];
+      if(!p.second)
+        continue;
+
+      for(int x : graph[i])
       {
-        int x = left[i];
-
-        if(sum - i >= (int)right.size())
+        auto p2 = vertex_position[x];
+        if(p2.second)
           continue;
-
-        int y = right[sum - i];
-
-        if(E(x,y))
-          edges.push_back( { i, sum-i } );
+        
+        count_sort_tab[p.first + p2.first].push_back({p.first, p2.first});
       }
     }
+
+    for(int i=0; i<n+2; i++)
+    {
+      for(auto const& p : count_sort_tab[i])
+        edges.push_back(p);
+    }
+
+    // for(auto const& p : edges)
+    //   cerr << p.first << " " << p.second << endl;
+
+    // TODO fix it works in O(N^2)
+    // for(int sum = 0; sum < (int)left.size() + (int)right.size(); sum++)
+    // {
+    //   int up = min<int>(sum + 1, left.size());
+    //   for(int i=0; i < up; i++)
+    //   {
+    //     int x = left[i];
+
+    //     if(sum - i >= (int)right.size())
+    //       continue;
+
+    //     int y = right[sum - i];
+
+    //     if(E(x,y))
+    //       edges.push_back( { i, sum-i } );
+    //   }
+    // }
   }
 
   bool BipartiteGraph::E(int x, int y)
@@ -125,10 +163,11 @@ namespace bipartite_permutation {
     l.resize(n, numeric_limits<int>::max());
     r.resize(n, 0);
     
-    for(int i=1; i<(int)left.size(); i++)
-    for(int j=1; j<(int)right.size(); j++)
+    for(auto const& edge : edges)
     {
-      if(E(left[i], right[j]))
+      int i = edge.first;
+      int j = edge.second;
+
       {
         l[left[i]] = min(l[left[i]], j);
         l[right[j]] = min(l[right[j]], i);
@@ -162,18 +201,11 @@ namespace bipartite_permutation {
 
   int BipartiteGraph::FvsCount()
   {
-    int l_size = left.size(); int r_size = right.size();
-
-    auto resize_matrix_fun = [=](vector<vector<int> > & matrix){
-        matrix.resize(l_size);
-        for(auto & row : matrix)
-          row.resize(r_size);
-    };
-
-    resize_matrix_fun(A);
-    resize_matrix_fun(B);
-    resize_matrix_fun(C);
-    resize_matrix_fun(D);
+    int l_size = left.size();
+    A.resize(l_size);
+    B.resize(l_size);
+    C.resize(l_size);
+    D.resize(l_size);
 
     CalculateLAndR();
 

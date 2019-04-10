@@ -4,6 +4,8 @@
 #include "permutation/util.h"
 
 #include <unordered_set>
+#include <unordered_map>
+
 #include <vector>
 
 using namespace std;
@@ -33,7 +35,7 @@ namespace bipartite_permutation {
     BipartiteGraph(vector<int> const& permutation);
 
     // As defined in paper
-    vector<vector<int>> A, B, C, D;
+    vector<unordered_map<int, int> > A, B, C, D;
     vector<int> l,r;
 
 

@@ -6,6 +6,20 @@ all_headers = [
   'bipartite_permutation/bipartite_permutation.h',
 ]
 
+debug_flags = [
+    '-std=c++17',
+    '-Wall',
+    '-pthread',
+    '-g',
+  ]
+
+production_flags = [
+    '-std=c++17',
+    '-Wall',
+    '-pthread',
+    '-O3',
+  ]
+
 cxx_library(
   name = 'fvs-algorithms',
   srcs = [
@@ -23,12 +37,7 @@ cxx_library(
   visibility = [
     'PUBLIC',
   ],
-  compiler_flags = [
-    '-std=c++17',
-    '-Wall',
-    '-pthread',
-    '-O3',
-  ],
+  compiler_flags = production_flags,
 )
 
 cxx_binary(
@@ -43,10 +52,17 @@ cxx_binary(
   visibility = [
     'PUBLIC',
   ],
-  compiler_flags = [
-    '-std=c++17',
-    '-Wall',
-    '-pthread',
-    '-O3',
+  compiler_flags = production_flags,
+)
+
+cxx_binary(
+  name = 'bipartite_permutation_main',
+  srcs = [
+    'bipartite_permutation/main.cpp',
   ],
+  link_style = 'static',
+  deps = [
+    '//:fvs-algorithms',
+  ],
+  compiler_flags = debug_flags,
 )
