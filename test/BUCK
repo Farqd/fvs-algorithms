@@ -4,6 +4,7 @@ cxx_test(
     'interval_test.cpp',
     'bipartite_permutation_test.cpp',
     'permutation_util_test.cpp',
+    'permutation_test.cpp',
   ],
   deps = [
     '//third_party:gtest',
@@ -13,6 +14,7 @@ cxx_test(
     '-std=c++17',
     '-Wall',
     '-pthread',
+    '-g',
   ],
   linker_flags = [
     '-pthread',

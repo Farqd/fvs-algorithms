@@ -34,18 +34,19 @@ namespace permutation_graphs
 
         vector<vector<int>> brcl;
         int n;
-        int limit[100];
-        int pred[100];
-        int pred_inv[100];
-
-        int A[100];
-        int B[100];
-        int C[100][100];
-        int D[100][100];
-        int E[100][100];
-        int F[100][100];
-
-
+        
+        vector<int> limit;
+        vector<int> pred;
+        vector<int> pred_inv;
+        
+        vector<int> A;
+        vector<int> B;
+        
+        vector<vector<int>> C;
+        vector<vector<int>> D;
+        vector<vector<int>> E;
+        vector<vector<int>> F;
+        
         struct CrossPair
         {
             int i;

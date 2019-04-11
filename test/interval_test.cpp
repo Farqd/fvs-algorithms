@@ -47,12 +47,10 @@ TEST(IntervalTest, RandomBigTest) {
     unordered_set <int> fvs = Fvs(graph);
     EXPECT_TRUE(util::IsFvs(IntervalGraphToGraph(graph), fvs));
     auto g = IntervalGraphToGraph(graph);
-    util::PrintGraph(g);
     
     if(fvs.size() > 0)
     {
       fvs.erase(fvs.begin());
-      cerr << fvs.size() << endl;
       EXPECT_FALSE(util::IsFvs(IntervalGraphToGraph(graph), fvs));
     }
   }
