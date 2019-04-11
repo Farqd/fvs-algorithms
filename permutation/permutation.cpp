@@ -30,10 +30,7 @@ namespace permutation_graphs
     int PermutationGraph::GetCrossPairIx(int i, int j)
     {
         assert(edges_map[i].count(j));
-        int result = edges_map[i][j];
-        assert(result >= 0);
-        return result;
-        // return edges_map[i][j];
+        return edges_map[i][j];
     }
 
     // Caclulate A,B,C,D,E,F as described in paper in order of 'ordered cross pairs'
@@ -114,7 +111,7 @@ namespace permutation_graphs
             int i = edge.i;
             int j = edge.j;
             int ij = edge.ix;
-            int ii = GetCrossPairIx(i,i);
+            int ii = GetCrossPairIx(i, i);
             int jj = GetCrossPairIx(j, j);
 
             // B
@@ -211,9 +208,241 @@ namespace permutation_graphs
         return n - A[last_edge] - 1;
     }
 
+    void PermutationGraph::RecoverResultA(int ij, unordered_set<int> & result)
+    {
+        if(ij == 0) return;
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+
+        if(i == j)
+        {
+            result.insert(j);
+            return RecoverResultA(limit[ij], result);
+        }
+        else
+        {
+            int k1 = pred[ij];
+            int k2 = pred_inv[ij];
+            if(A[ij] == A[GetCrossPairIx(i, k1)])
+                return RecoverResultA(GetCrossPairIx(i, k1), result);
+            if(A[ij] == A[GetCrossPairIx(k2, j)])
+                return RecoverResultA(GetCrossPairIx(k2, j), result);
+            
+            assert(A[ij] == B[ij]);
+            return RecoverResultB(ij, result);
+        }
+    }
+
+    void PermutationGraph::RecoverResultB(int ij, unordered_set<int> & result)
+    {
+        if(ij == 0) return;
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+        int ii = GetCrossPairIx(i,i);
+        int jj = GetCrossPairIx(j, j);
+
+        if(B[ij] == C[limit[jj]][i] + 1)
+        {
+            result.insert(j);
+            return RecoverResultC(limit[jj], i, result);
+        }
+
+        if(B[ij] == D[limit[ii]][j] + 1)
+        {
+            result.insert(i);
+            return RecoverResultD(limit[ii], j, result);
+        }
+
+        assert(B[ij] == A[limit[ij]] + 2);
+        result.insert(i);
+        result.insert(j);
+        return RecoverResultA(limit[ij], result);
+    }
+
+    void PermutationGraph::RecoverResultC(int ij, int k, unordered_set<int> & result)
+    {
+        if(ij == 0) 
+        {
+            result.insert(k);
+            return;
+        }
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+        int jj = GetCrossPairIx(j, j);
+
+        if(k > j)
+        {
+            result.insert(k);
+            return RecoverResultA(ij, result);
+        }
+        else if(k < j && i == j)
+        {
+            result.insert(j);
+            return RecoverResultC(limit[jj], k, result);
+        }
+        else if(k < j && i != j)
+        {
+            int j2 = pred[ij];
+            int ij2 = GetCrossPairIx(i, j2);
+
+            int i2 = pred_inv[ij];
+            int i2j = GetCrossPairIx(i2, j);
+
+            if(C[ij][k] == C[ij2][k])
+                return RecoverResultC(ij2, k, result);
+            if(C[ij][k] == C[i2j][k])
+                return RecoverResultC(i2j, k, result);
+            assert(C[ij][k] == E[ij][k]);
+            return RecoverResultE(ij, k, result);
+        }
+        assert(false);
+    }
+
+    void PermutationGraph::RecoverResultD(int ij, int k, unordered_set<int> & result)
+    {
+        if(ij == 0) 
+        {
+            result.insert(k);
+            return;
+        }
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+
+        assert(k > j);
+
+        if(permutation_inv[k] > permutation_inv[i])
+        {
+            result.insert(k);
+            return RecoverResultA(ij, result);
+        }
+        else if(permutation_inv[k] < permutation_inv[i] && i == j)
+        {
+            result.insert(j);
+            return RecoverResultD(limit[ij], k, result);
+        }
+        else if(permutation_inv[k] < permutation_inv[i] && i != j)
+        {
+            int j2 = pred[ij];
+            int ij2 = GetCrossPairIx(i, j2);
+
+            int i2 = pred_inv[ij];
+            int i2j = GetCrossPairIx(i2, j);
+
+            if(D[ij][k] == D[ij2][k])
+                return RecoverResultD(ij2, k, result);
+            if(D[ij][k] == D[i2j][k])
+                return RecoverResultD(i2j, k, result);
+            assert(D[ij][k] == F[ij][k]);
+            return RecoverResultF(ij, k, result);
+        }
+
+        assert(false);
+    }
+
+    void PermutationGraph::RecoverResultE(int ij, int k, unordered_set<int> & result)
+    {
+        if(ij == 0) 
+        {
+            result.insert(k);
+            return;
+        }
+
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+
+        assert( (permutation_inv[k] > permutation_inv[i] && k < j) );
+        int ii = GetCrossPairIx(i, i);
+
+        if(k < i)
+        {
+            return;
+        }
+        else
+        {
+            int kj = GetCrossPairIx(k, j);
+            result.insert(k);
+
+            if(E[ij][k] == C[limit[kj]][i] + 2)
+            {
+                result.insert(j);
+                return RecoverResultC(limit[kj], i, result);
+            }
+
+            if(E[ij][k] == D[limit[ii]][j] + 2)
+            {
+                result.insert(i);
+                return RecoverResultD(limit[ii], j, result);
+            }
+            
+            assert(E[ij][k] == A[limit[ij]] + 3);
+            result.insert(i);
+            result.insert(j);
+            return RecoverResultA(ij, result);
+        }
+    }
+
+    void PermutationGraph::RecoverResultF(int ij, int k, unordered_set<int> & result)
+    {
+        if(ij == 0) 
+        {
+            result.insert(k);
+            return;
+        }
+
+
+        int i = edges[ij].i;
+        int j = edges[ij].j;
+
+        assert(k > j && permutation_inv[k] < permutation_inv[i]);
+        int jj = GetCrossPairIx(j, j);
+
+        if(permutation_inv[k] < permutation_inv[j])
+            return;
+        else
+        {
+            int ik = GetCrossPairIx(i,k);
+            result.insert(k);
+
+            if(F[ij][k] == D[limit[ik]][j] + 2)
+            {
+                result.insert(i);
+                return RecoverResultD(limit[ik], j, result);
+            }
+
+            if(F[ij][k] == C[limit[jj]][i] + 2)
+            {
+                result.insert(j);
+                return RecoverResultC(limit[jj], i, result);
+            }
+
+            assert(F[ij][k] == A[limit[ij]] + 3);
+            result.insert(i);
+            result.insert(j);
+            return RecoverResultA(limit[ij], result);
+        }
+    }
+
     unordered_set<int> PermutationGraph::Fvs()
     {
-        return {};
+        int fvs_size = FvsCount();
+        // Now restore result
+        unordered_set<int> result;
+        for(int i=0; i<n-1; i++)
+            result.insert(i);
+
+        unordered_set<int> mcfs;
+
+        RecoverResultA(edges.back().ix, mcfs);
+        for(int x : mcfs)
+            result.erase(x-1);
+
+        assert((int)result.size() == fvs_size);
+        return result;
     }
 
 }

@@ -23,10 +23,12 @@ int main()
         
         PermutationGraph gr{perm};
 
-        int r = gr.FvsCount();
+        auto r = gr.Fvs();
+        
         int e = brute::EverySubset(gr.graph);
-        cerr << r << " " << e << endl;
-        assert(r == e);
+        cerr << r.size() << " " << e << endl;
+        assert(r.size() == e);
+        assert(util::IsFvs(gr.graph, r));
     }
 
     // // vector<int> v;

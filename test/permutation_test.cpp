@@ -21,32 +21,28 @@ TEST(Permutation, TestSize5)
   {
     PermutationGraph gr{x};
 
-    // unordered_set<int> fvs = gr.Fvs();
-    int r = gr.FvsCount();
-    if(brute::EverySubset(gr.graph) != r)
-    {
-      util::PrintVector(x);
-    }
-
-    EXPECT_EQ(brute::EverySubset(gr.graph), r);
-    // EXPECT_TRUE(util::IsFvs(gr.graph, fvs));
+    unordered_set<int> fvs = gr.Fvs();
+    EXPECT_EQ(brute::EverySubset(gr.graph), fvs.size());
+    EXPECT_TRUE(util::IsFvs(gr.graph, fvs));
   }
 }
 
 TEST(Permutation, BiggerTest1)
 {
   vector<int> v{8, 0, 1, 2, 9, 3, 10, 12, 4, 5, 6, 14, 15, 7, 11, 13};
-  PermutationGraph bg {v};
-  EXPECT_EQ(4, bg.FvsCount());
-  // EXPECT_TRUE(util::IsFvs(bg.graph, bg.Fvs()));
+  PermutationGraph pg {v};
+  auto fvs = pg.Fvs();
+  EXPECT_EQ(4, fvs.size());
+  EXPECT_TRUE(util::IsFvs(pg.graph, fvs));
 }
 
 TEST(Permutation, BiggerTest2)
 {
   vector<int> v{2, 3, 5, 0, 1, 7, 8, 9, 4, 10, 12, 6, 14, 11, 15, 13};
-  PermutationGraph bg {v};
-  EXPECT_EQ(2, bg.FvsCount());
-  // EXPECT_TRUE(util::IsFvs(bg.graph, bg.Fvs()));
+  PermutationGraph pg {v};
+  auto fvs = pg.Fvs();
+  EXPECT_EQ(2, fvs.size());
+  EXPECT_TRUE(util::IsFvs(pg.graph, fvs));
 }
 
 TEST(Permutation, VeryBigRandomTest)
@@ -59,9 +55,10 @@ TEST(Permutation, VeryBigRandomTest)
   for(int i=0; i<10; i++)
   {
     random_shuffle(x.begin(), x.end());
-    PermutationGraph gr{x};
-    EXPECT_EQ(brute::EverySubset(gr.graph), gr.FvsCount());
-    // EXPECT_TRUE(util::IsFvs(gr.graph, gr.Fvs()));
+    PermutationGraph pg {x};
+    auto fvs = pg.Fvs();
+    EXPECT_EQ(brute::EverySubset(pg.graph), fvs.size());
+    EXPECT_TRUE(util::IsFvs(pg.graph, fvs));
   }
 }
 

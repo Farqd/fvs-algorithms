@@ -47,6 +47,14 @@ namespace permutation_graphs
         vector<vector<int>> E;
         vector<vector<int>> F;
         
+        void RecoverResultA(int ix, unordered_set<int> & result);
+        void RecoverResultB(int ix, unordered_set<int> & result);
+
+        void RecoverResultC(int ix, int k, unordered_set<int> & result);
+        void RecoverResultD(int ix, int k, unordered_set<int> & result);
+        void RecoverResultE(int ix, int k, unordered_set<int> & result);
+        void RecoverResultF(int ix, int k, unordered_set<int> & result);
+
         struct CrossPair
         {
             int i;
