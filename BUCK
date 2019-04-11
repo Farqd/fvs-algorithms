@@ -4,6 +4,7 @@ all_headers = [
   'permutation/util.h',
   'interval/interval.h',
   'bipartite_permutation/bipartite_permutation.h',
+  'permutation/permutation.h',
 ]
 
 debug_flags = [
@@ -28,6 +29,7 @@ cxx_library(
     'permutation/util.cpp',
     'interval/interval.cpp',
     'bipartite_permutation/bipartite_permutation.cpp',
+    'permutation/permutation.cpp',
   ],
   headers = all_headers,
   exported_headers = all_headers,
@@ -37,7 +39,7 @@ cxx_library(
   visibility = [
     'PUBLIC',
   ],
-  compiler_flags = production_flags,
+  compiler_flags = debug_flags,
 )
 
 cxx_binary(
@@ -59,6 +61,19 @@ cxx_binary(
   name = 'bipartite_permutation_main',
   srcs = [
     'bipartite_permutation/main.cpp',
+  ],
+  link_style = 'static',
+  deps = [
+    '//:fvs-algorithms',
+  ],
+  compiler_flags = debug_flags,
+)
+
+
+cxx_binary(
+  name = 'permutation_main',
+  srcs = [
+    'permutation/main.cpp',
   ],
   link_style = 'static',
   deps = [

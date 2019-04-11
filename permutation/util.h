@@ -19,4 +19,6 @@ namespace permutation_graphs {
   // Return all edges. Works in O(N*log(N) + E)
   vector<pair<int, int> > CalculateEdges(vector<int> permutation);
 
+  // Return inverse permutation
+  vector<int> InversePermutation(vector<int> const& permutation);
 }

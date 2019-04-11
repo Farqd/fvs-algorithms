@@ -73,7 +73,7 @@ namespace
     while(r < end)
       tmp.push_back(tab[r++]);
 
-    for(int i=0; i<tmp.size(); i++)
+    for(int i=0; i<(int)tmp.size(); i++)
       tab[beg+i] = tmp[i];
   }
 }
@@ -87,3 +87,13 @@ vector<pair<int, int> > permutation_graphs::CalculateEdges(vector<int> permutati
   return result;
 }
 
+vector<int> permutation_graphs::InversePermutation(vector<int> const& permutation)
+{
+    vector<int> result;
+    result.resize(permutation.size());
+
+    for(unsigned i=0; i<permutation.size(); i++)
+      result[permutation[i]] = i;
+
+    return result;
+}

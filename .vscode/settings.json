@@ -21,7 +21,8 @@
     "array": "cpp",
     "string_view": "cpp",
     "set": "cpp",
-    "cassert": "cpp"
+    "cassert": "cpp",
+    "iosfwd": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,
