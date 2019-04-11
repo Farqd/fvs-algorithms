@@ -68,12 +68,13 @@ bool util::IsFvs(Graph const& graph, unordered_set<int> const& fvs)
 
 void util::PrintGraph(Graph const& graph)
 {
+  cerr << graph.size() << endl;
   for(int i=0; i< (int)graph.size(); i++)
   {
-    cout << i << ": ";
+    cerr << i << ": ";
     for(int x : graph[i])
-      cout << x << " ";
-    cout << endl;
+      cerr << x << " ";
+    cerr << endl;
   }
 }
 
@@ -81,6 +82,6 @@ void util::PrintVector(vector<int> const& v)
 {
   cerr << v.size() << endl;
   for(int x : v)
-  cerr << x << " ";
+    cerr << x << " ";
   cerr << endl << endl;
 }

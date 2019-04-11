@@ -14,8 +14,15 @@
 
 namespace interval {
 
-using Interval = pair<int, int>;
+struct Interval
+{
+  int begin;
+  int end;
+  int ix;
+};
+
 using IntervalGraph = vector<Interval>;
+
 struct Endpoint{
   int position;
   int interval;
@@ -24,7 +31,7 @@ struct Endpoint{
 
 void PrintIG(IntervalGraph const& graph);
 
-int Fvs(vector<Interval> graph);
+unordered_set<int> Fvs(vector<Interval> graph);
 
 Graph IntervalGraphToGraph(IntervalGraph const& intervals);
 

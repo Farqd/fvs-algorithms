@@ -24,6 +24,7 @@ TEST(BipartitePermutation, TestSize5)
     {
       BipartiteGraph gr {x};
       unordered_set<int> fvs = gr.Fvs();
+      EXPECT_EQ(brute::EverySubset(gr.graph), fvs.size());
       EXPECT_TRUE(util::IsFvs(gr.graph, fvs));
 
     } catch(GraphIsNotBipartiteExpcetion const&)

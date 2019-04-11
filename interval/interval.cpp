@@ -17,13 +17,13 @@ void PrintIG(IntervalGraph const& graph)
 {
   cerr << endl;
   for(auto const& x : graph)
-    cerr << x.first << " " << x.second << endl;
+    cerr << x.begin << " " << x.end << endl;
   cerr << endl;
 }
 
-int Fvs(vector<Interval> graph)
+unordered_set<int> Fvs(vector<Interval> graph)
 {
-  auto interval_cmp = [](Interval const& a, Interval const& b){return a.second < b.second; };
+  auto interval_cmp = [](Interval const& a, Interval const& b){return a.end < b.end; };
   sort(graph.begin(), graph.end(), interval_cmp);
 
   // PrintIG(graph);
@@ -32,14 +32,14 @@ int Fvs(vector<Interval> graph)
   for(int i = 0; i < (int)graph.size(); i++)
   {
     Interval const& iv = graph[i];
-    endpoints.push_back({iv.first, i, true});
-    endpoints.push_back({iv.second, i, false});
+    endpoints.push_back({iv.begin, i, true});
+    endpoints.push_back({iv.end, i, false});
   }
 
   auto endpoint_cmp = [](Endpoint const& a, Endpoint const& b){ return a.position < b.position; };
   sort(endpoints.begin(), endpoints.end(), endpoint_cmp);
   
-  vector<int> fvs;
+  unordered_set<int> fvs;
   // current intervals
   
   // After each right end at most two intervals can remain, x < y, remember, they interval indexes are sorted by right end
@@ -56,16 +56,16 @@ int Fvs(vector<Interval> graph)
 
       if(e.interval < x)
       {
-        fvs.push_back(y);
+        fvs.insert(graph[y].ix);
         y = x;
         x = e.interval;
       } else if(e.interval < y)
       {
-        fvs.push_back(y);
+        fvs.insert(graph[y].ix);
         y = e.interval;
       } else
       {
-        fvs.push_back(e.interval);
+        fvs.insert(graph[e.interval].ix);
       }
     }
     else // e is right end
@@ -80,7 +80,7 @@ int Fvs(vector<Interval> graph)
     }
   }
 
-  return fvs.size();
+  return fvs;
 }
 
 Graph IntervalGraphToGraph(IntervalGraph const& intervals)
@@ -93,7 +93,7 @@ Graph IntervalGraphToGraph(IntervalGraph const& intervals)
     auto const& x = intervals[i];
     auto const& y = intervals[j];
 
-    if(x.first > y.second || x.second < y.first) 
+    if(x.begin > y.end || x.end < y.begin) 
       continue;
 
     graph[i].push_back(j);
@@ -117,14 +117,14 @@ vector<IntervalGraph> GenerateAllGraphs(int size)
   do {
     IntervalGraph ig(size);
     for(int i = 0; i < size; i++)
-      { ig[i].first = -1; ig[i].second = -1; }
+      { ig[i].begin = -1; ig[i].end = -1; ig[i].ix = i; }
     
     for(int i = 0; i < (int)perm.size(); i++)
     {
-      if(ig[perm[i]].first == -1)
-        ig[perm[i]].first = i;
+      if(ig[perm[i]].begin == -1)
+        ig[perm[i]].begin = i;
       else
-        ig[perm[i]].second = i;
+        ig[perm[i]].end = i;
     }
 
     result.push_back(ig);
