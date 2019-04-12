@@ -5,6 +5,7 @@ all_headers = [
   'interval/interval.h',
   'bipartite_permutation/bipartite_permutation.h',
   'permutation/permutation.h',
+  'chordal/chordal.h',
 ]
 
 debug_flags = [
@@ -30,6 +31,7 @@ cxx_library(
     'interval/interval.cpp',
     'bipartite_permutation/bipartite_permutation.cpp',
     'permutation/permutation.cpp',
+    'chordal/chordal.cpp',
   ],
   headers = all_headers,
   exported_headers = all_headers,
@@ -74,6 +76,18 @@ cxx_binary(
   name = 'permutation_main',
   srcs = [
     'permutation/main.cpp',
+  ],
+  link_style = 'static',
+  deps = [
+    '//:fvs-algorithms',
+  ],
+  compiler_flags = debug_flags,
+)
+
+cxx_binary(
+  name = 'chordal_main',
+  srcs = [
+    'chordal/main.cpp',
   ],
   link_style = 'static',
   deps = [

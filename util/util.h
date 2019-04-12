@@ -21,4 +21,6 @@ namespace util
   void PrintGraph(Graph const& graph);
 
   void PrintVector(vector<int> const& v);
+
+  vector<Graph> AllGraphs(int size);
 }

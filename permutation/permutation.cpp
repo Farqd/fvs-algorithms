@@ -40,6 +40,8 @@ namespace permutation_graphs
     {
         // (edges (brcl)
         int m = 0;
+        edges_map.resize(n);
+
         for(int i=0; i<n; i++)
         {
             int pos = permutation_inv[i];

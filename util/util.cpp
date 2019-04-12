@@ -85,3 +85,40 @@ void util::PrintVector(vector<int> const& v)
     cerr << x << " ";
   cerr << endl << endl;
 }
+
+vector<Graph> util::AllGraphs(int size)
+{
+
+  vector<Graph> result;
+
+  if(size == 1)
+  {
+    Graph tmp;
+    tmp.push_back({});
+    result.push_back(tmp);
+    return result;    
+  }
+  
+  vector<Graph> smaller_graphs = AllGraphs(size-1);
+
+  for(Graph const& g : smaller_graphs)
+  {
+    for(int mask = 1; mask < (1 << (size-1)); mask++)
+    {
+      result.push_back(g);
+      auto & last_graph = result.back();
+      last_graph.push_back({});
+      
+      for(int i=0; i<size-1; i++)
+      {
+        if((mask>>i)&1)
+        {
+          last_graph[size-1].push_back(i);
+          last_graph[i].push_back(size-1);
+        }
+      }
+    }
+  }
+
+  return result;
+}

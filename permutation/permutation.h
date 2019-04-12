@@ -47,13 +47,13 @@ namespace permutation_graphs
         vector<vector<int>> E;
         vector<vector<int>> F;
         
-        void RecoverResultA(int ix, unordered_set<int> & result);
-        void RecoverResultB(int ix, unordered_set<int> & result);
+        void RecoverResultA(int ij, unordered_set<int> & result);
+        void RecoverResultB(int ij, unordered_set<int> & result);
 
-        void RecoverResultC(int ix, int k, unordered_set<int> & result);
-        void RecoverResultD(int ix, int k, unordered_set<int> & result);
-        void RecoverResultE(int ix, int k, unordered_set<int> & result);
-        void RecoverResultF(int ix, int k, unordered_set<int> & result);
+        void RecoverResultC(int ij, int k, unordered_set<int> & result);
+        void RecoverResultD(int ij, int k, unordered_set<int> & result);
+        void RecoverResultE(int ij, int k, unordered_set<int> & result);
+        void RecoverResultF(int ij, int k, unordered_set<int> & result);
 
         struct CrossPair
         {
@@ -64,13 +64,7 @@ namespace permutation_graphs
 
         vector<CrossPair> edges;
 
-        void PrintCP(int x)
-        {
-            cerr << edges[x].ix << ": " << edges[x].i << " " << edges[x].j << endl;
-
-        }
-        
-        unordered_map<int, int>  edges_map[100];
+        vector<unordered_map<int, int> > edges_map;
         int GetCrossPairIx(int i, int j);
     };
 }
