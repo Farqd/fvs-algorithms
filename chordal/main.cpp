@@ -7,42 +7,52 @@ using namespace chordal;
 
 int main()
 {
-    auto graphs = util::AllGraphs(4);
+    auto graphs = util::AllGraphs(7);
     cerr << graphs.size() << endl;
-
+int ix = 0;
     for(auto const& g : graphs)
     {
         try{
         ChordalGraph cg {g};
-            auto fvs = cg.Fvs();
-            // cerr << fvs.size()<<endl;
-            if(!util::IsFvs(g, fvs))
+        ++ix;
+        if(ix % 50 ==0) cerr << ix << endl;
+            auto fvs = cg.FvsCount();
+            int correct = brute::EverySubset(g);
+            if(fvs != correct)
             {
+                cerr << fvs << " " << correct << endl << endl;
                 util::PrintGraph(g);
                 cerr << endl;
                 util::PrintVector(cg.perfect_elimination);
-                cerr << "FVS"<<endl;
-                for(int x : fvs)
-                cerr << x << " ";
-                cerr<<endl;
                 throw "";
-            }   
-            int corr = brute::EverySubset(g);
-            if(corr != fvs.size())
-            {
-                util::PrintGraph(g);
-                cerr << endl;
-                util::PrintVector(cg.perfect_elimination);
-                cerr << endl;
-                cerr << corr << " " << fvs.size() << endl;
-                
-                cerr << "FVS"<<endl;
-                for(int x : fvs)
-                cerr << x << " ";
-                cerr<<endl;
-
             }
-            assert(corr == fvs.size());
+            continue;
+            // // cerr << fvs.size()<<endl;
+
+            // if(!util::IsFvs(g, fvs))
+            // {
+            //     cerr << "FVS"<<endl;
+            //     for(int x : fvs)
+            //     cerr << x << " ";
+            //     cerr<<endl;
+            //     throw "";
+            // }   
+            // int corr = brute::EverySubset(g);
+            // if(corr != fvs.size())
+            // {
+            //     util::PrintGraph(g);
+            //     cerr << endl;
+            //     util::PrintVector(cg.perfect_elimination);
+            //     cerr << endl;
+            //     cerr << corr << " " << fvs.size() << endl;
+                
+            //     cerr << "FVS"<<endl;
+            //     for(int x : fvs)
+            //     cerr << x << " ";
+            //     cerr<<endl;
+
+            // }
+            // assert(corr == fvs.size());
         } catch(ChordalGraph::GraphIsNotChordal e)
         {
             // util::PrintGraph(g);
@@ -63,6 +73,9 @@ int main()
     
     
     ChordalGraph cg {graph};
+    cerr << cg.FvsCount() << endl;
+    cerr << brute::EverySubset(graph) << endl;
+    return 0;
     auto elim = cg.FindPerfectElimination(graph);
 
     for(int x : elim)

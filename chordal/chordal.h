@@ -3,7 +3,10 @@
 #include "util/util.h"
 
 #include <unordered_set>
+#include <set>
+
 #include <list>
+#include <unordered_map>
 
 using namespace std;
 
@@ -37,6 +40,15 @@ private:
 
     int GetFirst(list< set_timestamp_pair> & sequence);
     bool IsChordal();
+
+    unordered_map<int,int> results[10000];
+    
+    unordered_set<int> v[10000];
+    unordered_set<int> v_not_in_parent[10000];
+    
+    int parent[10000];
+
+    
     
 
 };
