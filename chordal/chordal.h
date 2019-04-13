@@ -45,10 +45,11 @@ private:
     
     unordered_set<int> v[10000];
     unordered_set<int> v_not_in_parent[10000];
+    vector<int> children_tab[10000];
+
+    void RecoverResult(int k, int x, int y, unordered_set<int> & result);
     
     int parent[10000];
-
-    
     
 
 };

@@ -102,7 +102,7 @@ namespace chordal
             for(int x : v[i])
                 candidates.push_back(x);
             
-            vector<int> children;
+            vector<int> & children = children_tab[i];
             for(int x : graph_reordered[i])
                 if(parent[x] == i)
                     children.push_back(x);
@@ -138,6 +138,71 @@ namespace chordal
             result = max(p.second, result);
 
         return n - result;
+    }
+
+    void ChordalGraph::RecoverResult(int k, int x, int y, unordered_set<int> & result)
+    {
+        // cerr << k << endl;
+        auto unpack  = [&](int k){
+            pair<int, int> result;
+            int a = k / (n+1);
+            int b = k % (n+1);
+
+            return pair<int, int> { a-1, b-1 };
+        };
+
+        auto pack = [&](int a, int b)
+        {
+            if(a > b)
+                swap(a,b);
+            return (a+1) * (n+1) + b + 1;
+        };
+
+        auto recover_pair_fun = [&](int k, int a, int b) {
+            if(v[k].count(a) && v[k].count(b))
+                return pair<int, int>{a, b};
+            if( (!v[k].count(a)) && (!v[k].count(b)))
+            {
+                // dwóch dowolnych ziomków nie z parent, może być -1
+                int tmp = 0;
+                pair<int, int> best{-1, -1};
+                for(int x : v_not_in_parent[k])
+                for(int y : v_not_in_parent[k])
+                {
+                    if(results[k][pack(x, y)] >= tmp)
+                    {
+                        tmp = results[k][pack(x, y)];
+                        best = {x, y};
+                    }
+                }
+                return best;
+            }
+            assert(v[k].count(a) ||v[k].count(b));
+
+            if(v[k].count(b))
+                a = b;
+
+            // jeden ziom nie z parent, moze byc -1
+            int tmp = 0;
+            pair<int, int> best{-1, -1};
+            for(int x : v_not_in_parent[k])
+            {
+                if(results[k][pack(a, x)] >= tmp)
+                {
+                    tmp = results[k][pack(a, x)];
+                    best = {a, x};
+                }
+            }
+            return best;
+        };
+        result.insert(x);
+        result.insert(y);
+        
+        for(int child : children_tab[k])
+        {
+            auto p = recover_pair_fun(child, x, y);
+            RecoverResult(child, p.first, p.second, result);
+        }
     }
 
     bool ChordalGraph::IsChordal()
@@ -183,32 +248,38 @@ namespace chordal
     {
         unordered_set<int> result;
         
-        for(int i=0; i<n; i++)
-        {
-            int nc = 0;
-            for(int x : graph_reordered[i])
-                if(x >= i) ++nc;
-            if(nc <= 1) continue;
+        int score = FvsCount();
+        
+        pair<int, int> best;
+        int tmp = 0;
 
-            int rem = numeric_limits<int>::max();
-            
-            if(result.count(i) == 0)
-                rem = i;
-            
-            for(int x : graph_reordered[i])
-                if(x >= i && result.count(x) == 0)
-                    rem = min(rem, x);
-            for(int x : graph_reordered[i])
-                if(x >= i && x != rem)
-                    result.insert(x);
-            if(i != rem)
-                result.insert(i);
+        auto unpack  = [&](int k){
+            pair<int, int> result;
+            int a = k / (n+1);
+            int b = k % (n+1);
+
+            return pair<int, int> { a-1, b-1 };
+        };
+
+        for(auto const& p : results[n-1])
+        {
+            if(p.second >= tmp)
+            {
+                tmp = p.second;
+                best = unpack(p.first);
+            }
         }
 
-        unordered_set<int> reorder;
-        for(int x : result)
-            reorder.insert(perfect_elimination[x]);
+        RecoverResult(n-1, best.first, best.second, result);
         
+        unordered_set<int> reorder;
+        for(int i=0; i<n; i++)
+            reorder.insert(i);
+        result.erase(-1);
+        for(int x : result)
+            reorder.erase(perfect_elimination[x]);
+
+        // assert(reorder.size() == score);
         return reorder;
     }
 

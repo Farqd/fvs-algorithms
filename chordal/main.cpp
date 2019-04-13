@@ -15,12 +15,18 @@ int ix = 0;
         try{
         ChordalGraph cg {g};
         ++ix;
-        if(ix % 50 ==0) cerr << ix << endl;
-            auto fvs = cg.FvsCount();
+        if(ix % 100 ==0) cerr << "ct: " << ix << endl;
+            auto fvs = cg.Fvs();
+        
             int correct = brute::EverySubset(g);
-            if(fvs != correct)
+            assert(util::IsFvs(g, fvs));
+            if(fvs.size() != correct)
             {
-                cerr << fvs << " " << correct << endl << endl;
+                cerr << "ME: " << fvs.size() << " expected: " << correct << endl << endl;
+                cerr << "FVS ";
+                for(int x : fvs)
+                cerr << x << " ";
+                cerr << endl;
                 util::PrintGraph(g);
                 cerr << endl;
                 util::PrintVector(cg.perfect_elimination);
