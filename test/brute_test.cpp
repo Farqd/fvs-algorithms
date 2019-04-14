@@ -11,7 +11,7 @@ using namespace util;
 
 namespace {
 
-TEST(IntervalTest, TestSize5) {
+TEST(BruteTest, TestSize5) {
     auto graphs = AllGraphs(5);
     for(auto const& graph : graphs)
         EXPECT_EQ(brute::EverySubset(graph), brute::CycleSearch(graph));
