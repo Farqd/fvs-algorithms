@@ -1,6 +1,6 @@
 all_headers = [
   'util/util.h',
-  'brute/brute.h',
+  'util/brute.h',
   'permutation/util.h',
   'interval/interval.h',
   'bipartite_permutation/bipartite_permutation.h',
@@ -26,7 +26,7 @@ cxx_library(
   name = 'fvs-algorithms',
   srcs = [
     'util/util.cpp',
-    'brute/brute.cpp',
+    'util/brute.cpp',
     'permutation/util.cpp',
     'interval/interval.cpp',
     'bipartite_permutation/bipartite_permutation.cpp',

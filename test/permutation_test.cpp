@@ -1,5 +1,5 @@
 #include "permutation/permutation.h"
-#include "brute/brute.h"
+#include "util/brute.h"
 
 #include "gtest/gtest.h"
 

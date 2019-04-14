@@ -1,5 +1,5 @@
 #include "interval/interval.h"
-#include "brute/brute.h"
+#include "util/brute.h"
 
 #include "gtest/gtest.h"
 

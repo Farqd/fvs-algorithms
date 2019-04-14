@@ -1,7 +1,7 @@
 #include "permutation/permutation.h"
 #include "permutation/util.h"
 #include "util/util.h"
-#include "brute/brute.h"
+#include "util/brute.h"
 
 #include <vector>
 
