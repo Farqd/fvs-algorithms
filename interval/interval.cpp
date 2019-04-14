@@ -13,6 +13,12 @@
 
 namespace interval {
 
+struct Endpoint{
+  int position;
+  int interval;
+  bool left;
+};
+
 void PrintIG(IntervalGraph const& graph)
 {
   cerr << endl;

@@ -18,20 +18,27 @@ namespace permutation_graphs
     class PermutationGraph
     {
     public:
-            
+
+        // Permutation staring from 0, e.g. [2,3,0,1]
         PermutationGraph(vector<int> const& permutation);
 
+        // Returns minum FVS
         unordered_set<int> Fvs();
         
+        // Returns size of minumum FVS
         int FvsCount();
 
+        // Underlying graph for debugging
         Graph const graph;
 
     private:
 
         vector<int> permutation;
+        
+        // Inverse permutation
         vector<int> permutation_inv;
 
+        // All data structures as defined in paper
         vector<vector<int>> brcl;
         int n;
         

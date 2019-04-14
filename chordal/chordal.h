@@ -17,23 +17,31 @@ class ChordalGraph
 {
 public:
 
+    // Constructor throws GraphIsNotChordal if given graph is not Chordal
     ChordalGraph(Graph const& graph);
 
+    // Returns size of minimum FVS
     int FvsCount();
 
+    // Returns FVS
     unordered_set<int> Fvs();
 
-    vector<int> FindPerfectElimination(Graph const& graph);
-
+    // Underlying graph for debug purposses
     Graph const graph;
+
+    // Graph with vertices in perfect elimination order
     Graph graph_reordered;
 
-    int n;
 
     class GraphIsNotChordal : exception { };
 
+    // Perfect elimination order of graph
     vector<int> perfect_elimination;
+    
 private:
+
+    vector<int> FindPerfectElimination(Graph const& graph);
+    int n;
 
     using set_timestamp_pair = pair<unordered_set<int>, int>;
     vector<int> perfect_elimination_inv;
