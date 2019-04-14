@@ -22,17 +22,17 @@ Based on https://www.sciencedirect.com/science/article/pii/0166218X88900868
 Implementation based on https://www.sciencedirect.com/science/article/pii/0020019094001332
 * Works in `(N*M)`
 * I take `permutation` as input
-* Pseudocode in the article had lot's of bugs/typos :(
+* Pseudocode in the article has lot's of bugs/typos :(
 
 ## Bipartite-Permutation Graphs
 
 Implementation based on https://www.researchgate.net/publication/261490799_On_Minimum_Feedback_Vertex_Sets_in_Graphs
 
-* Code takes permutaiton as an input, thus my time complexity is `O(N*log(N) + M)`, in the algorithm we need to list all edges and I don't think there is any way to calculate them faster (I use MergeSort)
-* Taking list of edges as an input would require implementing recognition of permutation graph class
+* Code takes permutaiton as an input, time complexity is `O(N*log(N) + M)`. In the algorithm we need to list all edges and I don't know any way to do it faster (I use MergeSort)
+* Taking list of edges as an input would require implementing recognition of permutation graph class (possible todo later)
 * I don't know how to generate non-trivial biparite-permutation, right now I tested on all graphs with `size <= 10` for correctness and some trivial big ones for performance (seems to be in line with `O(N*log(N) + M)`)
 * Some bugs in pseudocode from paper :(
-  * `i1 = i1` in line 6, same for `j1`, should be `i1 = i - 1`
+  * `i1 = i1` in line 6, should be `i1 = i - 1`, similar for `j1`
   * `l(j1) = i2` in line 11, should be `l(i1) = j2` instead 
 
 
