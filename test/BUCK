@@ -5,6 +5,7 @@ cxx_test(
     'bipartite_permutation_test.cpp',
     'permutation_util_test.cpp',
     'permutation_test.cpp',
+    'chordal_test.cpp',
   ],
   deps = [
     '//third_party:gtest',
