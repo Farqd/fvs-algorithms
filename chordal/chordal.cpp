@@ -73,10 +73,9 @@ namespace chordal
 
         auto get_result_lam = [&](int k, int a, int b) {
             if(v[k].count(a) && v[k].count(b))
-                return results[k][pack(a, b)];
+                return results[k][pack(a, b)] - 2;
             if( (!v[k].count(a)) && (!v[k].count(b)))
             {
-                // dwóch dowolnych ziomków nie z parent, może być -1
                 int tmp = 0;
                 for(int x : v_not_in_parent[k])
                 for(int y : v_not_in_parent[k])
@@ -88,11 +87,10 @@ namespace chordal
             if(v[k].count(b))
                 a = b;
 
-            // jeden ziom nie z parent, moze byc -1
             int tmp = 0;
             for(int x : v_not_in_parent[k])
                 tmp = max(tmp, results[k][pack(a, x)]);
-            return tmp;
+            return tmp - 1;
         };
 
         for(int i=0; i<n; i++)
@@ -107,25 +105,16 @@ namespace chordal
                 if(parent[x] == i)
                     children.push_back(x);
             
-            auto ptx = [&](int k){
-                int res = 0;
-                for(int x: children)
-                    if(v[x].count(k))
-                        ++res;
-                return res;
-            };
-
             for(int x : candidates)
             for(int y : candidates)
             {
+                if(x != -1 && x == y) continue;
                 int tmp = 0;
                 if(x != -1)
                     tmp++;
                 if(y != -1 && x!=y)
                     tmp++;
                 
-                tmp -= ptx(x);
-                tmp -= ptx(y);
                 for(int child : children)
                     tmp += get_result_lam(child, x, y);
 
@@ -163,7 +152,6 @@ namespace chordal
                 return pair<int, int>{a, b};
             if( (!v[k].count(a)) && (!v[k].count(b)))
             {
-                // dwóch dowolnych ziomków nie z parent, może być -1
                 int tmp = 0;
                 pair<int, int> best{-1, -1};
                 for(int x : v_not_in_parent[k])
@@ -182,7 +170,6 @@ namespace chordal
             if(v[k].count(b))
                 a = b;
 
-            // jeden ziom nie z parent, moze byc -1
             int tmp = 0;
             pair<int, int> best{-1, -1};
             for(int x : v_not_in_parent[k])

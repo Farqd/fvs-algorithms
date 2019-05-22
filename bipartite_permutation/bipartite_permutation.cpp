@@ -125,26 +125,6 @@ namespace bipartite_permutation {
         edges.push_back(p);
     }
 
-    // for(auto const& p : edges)
-    //   cerr << p.first << " " << p.second << endl;
-
-    // TODO fix it works in O(N^2)
-    // for(int sum = 0; sum < (int)left.size() + (int)right.size(); sum++)
-    // {
-    //   int up = min<int>(sum + 1, left.size());
-    //   for(int i=0; i < up; i++)
-    //   {
-    //     int x = left[i];
-
-    //     if(sum - i >= (int)right.size())
-    //       continue;
-
-    //     int y = right[sum - i];
-
-    //     if(E(x,y))
-    //       edges.push_back( { i, sum-i } );
-    //   }
-    // }
   }
 
   bool BipartiteGraph::E(int x, int y)
