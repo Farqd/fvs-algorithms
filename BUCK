@@ -93,7 +93,7 @@ cxx_binary(
   deps = [
     '//:fvs-algorithms',
   ],
-  compiler_flags = debug_flags,
+  compiler_flags = production_flags,
 )
 
 cxx_binary(

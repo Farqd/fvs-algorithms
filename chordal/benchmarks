@@ -1,0 +1,93 @@
+interval:
+
+build with '-O3', '-std=c++17',
+gcc version 7.3.0 
+Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+
+Chordal graph is a "tree" of cliques.
+I will create a clique of random size <= 5 and connect it to random previous vertex, until i achieve size N.
+
+K = 10;
+
+N= 200
+edges= 1314
+finished computation at Thu May 23 17:09:32 2019
+elapsed time: 0.0108332s
+FVS= 131
+
+N= 1000
+edges= 6666
+finished computation at Thu May 23 17:10:04 2019
+elapsed time: 0.0611947s
+FVS= 674
+
+
+N= 5000
+edges= 31656
+finished computation at Thu May 23 17:10:18 2019
+elapsed time: 0.281142s
+FVS= 3249
+
+N= 10000
+edges= 62732
+finished computation at Thu May 23 17:10:34 2019
+elapsed time: 0.455501s
+FVS= 6485
+
+
+K=50
+
+N= 200
+edges= 6550
+finished computation at Thu May 23 17:14:02 2019
+elapsed time: 0.153762s
+FVS= 180
+
+
+N= 1000
+edges= 30896
+finished computation at Thu May 23 17:13:45 2019
+elapsed time: 0.459978s
+FVS= 916
+
+
+N= 5000
+edges= 157920
+finished computation at Thu May 23 17:13:32 2019
+elapsed time: 1.96147s
+FVS= 4586
+
+
+N= 10000
+edges= 324814
+finished computation at Thu May 23 17:12:50 2019
+elapsed time: 4.04407s
+FVS= 9209
+
+
+K=100
+
+N= 200
+edges= 11010
+finished computation at Thu May 23 17:14:52 2019
+elapsed time: 0.283115s
+FVS= 182
+
+N= 1000
+edges= 72598
+finished computation at Thu May 23 17:15:26 2019
+elapsed time: 1.75602s
+FVS= 961
+
+N= 5000
+edges= 320578
+finished computation at Thu May 23 17:15:46 2019
+elapsed time: 6.87024s
+FVS= 4783
+
+N= 10000
+edges= 670044
+finished computation at Thu May 23 17:16:13 2019
+elapsed time: 14.4821s
+FVS= 9591

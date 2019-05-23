@@ -10,6 +10,8 @@
 
 using namespace std;
 
+const int MAXN = 10000;
+
 namespace chordal
 {
 
@@ -49,15 +51,15 @@ private:
     int GetFirst(list< set_timestamp_pair> & sequence);
     bool IsChordal();
 
-    unordered_map<int,int> results[10000];
+    unordered_map<int,int> results[MAXN];
     
-    unordered_set<int> v[10000];
-    unordered_set<int> v_not_in_parent[10000];
-    vector<int> children_tab[10000];
+    unordered_set<int> v[MAXN];
+    unordered_set<int> v_not_in_parent[MAXN];
+    vector<int> children_tab[MAXN];
 
     void RecoverResult(int k, int x, int y, unordered_set<int> & result);
     
-    int parent[10000];
+    int parent[MAXN];
     
 
 };

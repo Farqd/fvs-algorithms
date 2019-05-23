@@ -50,7 +50,8 @@
     "streambuf": "cpp",
     "system_error": "cpp",
     "tuple": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "chrono": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,
