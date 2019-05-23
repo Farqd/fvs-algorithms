@@ -3,49 +3,67 @@
 #include "util/util.h"
 #include "util/brute.h"
 
+#include <chrono>
 #include <vector>
 
 using namespace permutation_graphs;
 
-vector<int> GenRand()
+vector<int> GenRand(int n)
 {
     vector<int> result;
-    for(int i=0; i<100; i++)
+    for(int i=0; i<n; i++)
     result.push_back(i);
     random_shuffle(result.begin(), result.end());
 
     return result;
 }
 
+
+vector<int> GenRandSparse(int n)
+{
+    vector<int> result;
+    for(int i=0; i<n; i++)
+    result.push_back(i);
+    for(int i=0; i*i < n; i++)
+    {
+        int x = rand() % n;
+        int y = rand() % n;
+        swap(result[x], result[y]);
+    }   
+
+    return result;
+}
+
+int edges(Graph const& g)
+{
+    int result = 0;
+    for(auto const& x : g)
+        result += x.size();
+    return result;
+}
+
 int main()
 {
-    // vector<int> perm {1, 7, 5, 2, 0, 6, 3, 4};
-    // vector<int> perm{5,4,3,2,1,0};
-    // vector<int> perm{8, 0, 1, 2, 9, 3, 10, 12, 4, 5, 6, 14, 15, 7, 11, 13};
-    // vector<int> perm{2,3,0,1};
-    // vector<int> perm{0,1,2,3,4, 5, 6, 7, 8, 9, 10, 11, 12};
-    // auto perms = AllPermutations(6);
-    // int ix = 0;
-    // while(true)
-    // for(auto const& perm : perms)
-    auto perm = GenRand();
-    {
-        
-        PermutationGraph gr{perm};
+    srand(time(0));
+    const int N = 1000;
 
-        auto r = gr.Fvs();
-        
-        // int e = brute::EverySubset(gr.graph);
-        cerr << r.size() << endl;
-        assert(util::IsFvs(gr.graph, r));
-    }
+    auto perm = GenRandSparse(N);
+        cerr << "N= " << N << endl;
+    auto graph_ = PermutationToGraph(perm);
+    cerr << "edges= " << edges(graph_) << endl;
 
-    // // vector<int> v;
-    // PermutationGraph gr{perm};
+    auto start = std::chrono::system_clock::now();
 
-    // int r = gr.FvsCount();
-    // int e = brute::EverySubset(gr.graph);
-    // cerr << "RESULT: " << r << " EXPECTED: " << e << endl;
-    // assert(util::IsFvs(gr.graph, gr.Fvs()));
+    PermutationGraph gr{perm};
+    auto fvs = gr.Fvs();
+
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+ 
+    std::cout << "finished computation at " << std::ctime(&end_time)
+              << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    cerr <<"FVS= " << fvs.size() << endl;
+    assert(util::IsFvs(graph_, fvs));
 }
   

@@ -14,9 +14,6 @@ namespace permutation_graphs
     PermutationGraph::PermutationGraph(vector<int> const& permutation)
         : graph(PermutationToGraph(permutation))
     {
-        for(int x : permutation)
-        cerr << x <<" ";
-        cerr<<endl;
         // Adding 0->0 to the permutation, later existance of this line
         // makes code simpler
         this->permutation.push_back(0);

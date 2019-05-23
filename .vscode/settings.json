@@ -51,7 +51,8 @@
     "system_error": "cpp",
     "tuple": "cpp",
     "typeinfo": "cpp",
-    "chrono": "cpp"
+    "chrono": "cpp",
+    "ratio": "cpp"
   },
   "files.exclude": {
     "**/.classpath": true,

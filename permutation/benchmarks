@@ -1,0 +1,69 @@
+permutation:
+
+build with '-O3', '-std=c++17',
+gcc version 7.3.0 
+Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+
+random permutation, ~N^2 EDGES
+
+
+N= 100
+edges= 4952
+finished computation at Thu May 23 17:28:52 2019
+elapsed time: 0.180966s
+FVS= 75
+
+N= 200
+edges= 18768
+finished computation at Thu May 23 17:32:00 2019
+elapsed time: 1.55079s
+FVS= 162
+
+N= 300
+edges= 45128
+finished computation at Thu May 23 17:32:32 2019
+elapsed time: 5.17964s
+FVS= 257
+
+
+N= 500
+edges= 130932
+finished computation at Thu May 23 17:31:52 2019
+elapsed time: 23.8795s
+FVS= 434
+
+
+sparse
+
+
+N= 100
+edges= 964
+finished computation at Thu May 23 17:34:58 2019
+elapsed time: 0.0306792s
+FVS= 14
+
+N= 200
+edges= 3602
+finished computation at Thu May 23 17:35:05 2019
+elapsed time: 0.217544s
+FVS= 23
+
+
+N= 300
+edges= 6284
+finished computation at Thu May 23 17:33:47 2019
+elapsed time: 0.572957s
+FVS= 30
+
+N= 500
+edges= 11666
+finished computation at Thu May 23 17:35:27 2019
+elapsed time: 1.7023s
+FVS= 36
+
+N= 1000
+edges= 45940
+finished computation at Thu May 23 17:36:04 2019
+elapsed time: 16.112s
+FVS= 56
