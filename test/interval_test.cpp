@@ -13,11 +13,14 @@ TEST(IntervalTest, TestSize5) {
     
   for(auto const& ivGraph : graphs)
   {    
-    unordered_set<int> fvs = Fvs(ivGraph);
+    vector<int> fvs = Fvs(ivGraph);
     auto const& graph = IntervalGraphToGraph(ivGraph);
     int fvs_brute = brute::EverySubset(graph);
     
-    EXPECT_TRUE(util::IsFvs(IntervalGraphToGraph(ivGraph), fvs));
+    unordered_set<int> fvs_set;
+    for(int x : fvs) fvs_set.insert(x);
+    EXPECT_EQ(fvs_set.size(), fvs.size());
+    EXPECT_TRUE(util::IsFvs(IntervalGraphToGraph(ivGraph), fvs_set));
     EXPECT_EQ(fvs_brute, fvs.size());
   }
 }
@@ -44,14 +47,18 @@ TEST(IntervalTest, RandomBigTest) {
   for(int i=0; i<5; i++)
   {
     auto graph = GenerateIG(50);
-    unordered_set <int> fvs = Fvs(graph);
-    EXPECT_TRUE(util::IsFvs(IntervalGraphToGraph(graph), fvs));
+    vector <int> fvs = Fvs(graph);
+    unordered_set<int> fvs_set;
+    for(int x : fvs) fvs_set.insert(x);
+    EXPECT_EQ(fvs_set.size(), fvs.size());
+
+    EXPECT_TRUE(util::IsFvs(IntervalGraphToGraph(graph), fvs_set));
     auto g = IntervalGraphToGraph(graph);
     
     if(fvs.size() > 0)
     {
-      fvs.erase(fvs.begin());
-      EXPECT_FALSE(util::IsFvs(IntervalGraphToGraph(graph), fvs));
+      fvs_set.erase(*fvs.begin());
+      EXPECT_FALSE(util::IsFvs(IntervalGraphToGraph(graph), fvs_set));
     }
   }
 }

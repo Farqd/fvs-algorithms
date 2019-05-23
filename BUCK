@@ -95,3 +95,15 @@ cxx_binary(
   ],
   compiler_flags = debug_flags,
 )
+
+cxx_binary(
+  name = 'interval_main',
+  srcs = [
+    'interval/main.cpp',
+  ],
+  link_style = 'static',
+  deps = [
+    '//:fvs-algorithms',
+  ],
+  compiler_flags = production_flags,
+)

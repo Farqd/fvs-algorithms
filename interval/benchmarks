@@ -1,0 +1,42 @@
+interval:
+
+build with '-O3', '-std=c++17',
+gcc version 7.3.0 
+Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+~(n^2)/3 edges
+
+Generated graphs had ~n^2/3 edges, it doesn't go into time complexity
+With sorting
+
+N = 100000
+FVS= 99423
+finished computation at Thu May 23 15:11:07 2019
+elapsed time: 0.151752s
+
+N = 1000000
+FVS= 998119
+finished computation at Thu May 23 15:10:51 2019
+elapsed time: 1.87077s
+
+N = 5000000
+FVS= 4995780
+finished computation at Thu May 23 15:11:57 2019
+elapsed time: 9.48909s
+
+O(N) edges
+
+N = 100000
+FVS= 15664
+finished computation at Thu May 23 15:14:50 2019
+elapsed time: 0.141572s
+
+N = 1000000
+FVS= 157320
+finished computation at Thu May 23 15:15:10 2019
+elapsed time: 1.06427s
+
+N = 5000000
+FVS= 786686
+finished computation at Thu May 23 15:15:31 2019
+elapsed time: 6.11444s

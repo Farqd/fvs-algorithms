@@ -27,7 +27,7 @@ void PrintIG(IntervalGraph const& graph)
   cerr << endl;
 }
 
-unordered_set<int> Fvs(vector<Interval> graph)
+vector<int> Fvs(vector<Interval> graph)
 {
   auto interval_cmp = [](Interval const& a, Interval const& b){return a.end < b.end; };
   sort(graph.begin(), graph.end(), interval_cmp);
@@ -45,7 +45,7 @@ unordered_set<int> Fvs(vector<Interval> graph)
   auto endpoint_cmp = [](Endpoint const& a, Endpoint const& b){ return a.position < b.position; };
   sort(endpoints.begin(), endpoints.end(), endpoint_cmp);
   
-  unordered_set<int> fvs;
+  vector<int> fvs;
   // current intervals
   
   // After each right end at most two intervals can remain, x < y, remember, they interval indexes are sorted by right end
@@ -62,16 +62,16 @@ unordered_set<int> Fvs(vector<Interval> graph)
 
       if(e.interval < x)
       {
-        fvs.insert(graph[y].ix);
+        fvs.push_back(graph[y].ix);
         y = x;
         x = e.interval;
       } else if(e.interval < y)
       {
-        fvs.insert(graph[y].ix);
+        fvs.push_back(graph[y].ix);
         y = e.interval;
       } else
       {
-        fvs.insert(graph[e.interval].ix);
+        fvs.push_back(graph[e.interval].ix);
       }
     }
     else // e is right end
@@ -108,6 +108,25 @@ Graph IntervalGraphToGraph(IntervalGraph const& intervals)
 
   return graph;
 } 
+
+int CountEdges(IntervalGraph const& intervals)
+{
+  int result = 0;
+
+  for(int i = 0; i < (int)intervals.size(); i++)
+  for(int j = i + 1; j < (int)intervals.size(); j++)
+  {
+    auto const& x = intervals[i];
+    auto const& y = intervals[j];
+
+    if(x.begin > y.end || x.end < y.begin) 
+      continue;
+
+    result++;
+  }
+
+  return result;
+}
 
 vector<IntervalGraph> GenerateAllGraphs(int size)
 {
