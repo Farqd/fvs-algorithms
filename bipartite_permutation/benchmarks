@@ -7,3 +7,28 @@ Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
 
 random permutation, ~N^2 EDGES
 
+
+
+N= 1000
+edges= 28748
+finished computation at Wed May 29 23:41:12 2019
+elapsed time: 0.0858587s
+FVS= 386
+
+N= 5000
+edges= 182058
+finished computation at Wed May 29 23:42:47 2019
+elapsed time: 0.549018s
+FVS= 2134
+
+N= 10000
+edges= 511670
+finished computation at Wed May 29 23:42:31 2019
+elapsed time: 1.38563s
+FVS= 4654
+
+N= 20000
+edges= 2843038
+finished computation at Wed May 29 23:43:13 2019
+elapsed time: 7.95475s
+FVS= 9565
