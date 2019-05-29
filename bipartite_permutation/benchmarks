@@ -1,0 +1,9 @@
+permutation_bipartite:
+
+build with '-O3', '-std=c++17',
+gcc version 7.3.0 
+Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+
+random permutation, ~N^2 EDGES
+
