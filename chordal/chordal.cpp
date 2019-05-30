@@ -8,7 +8,6 @@
 
 namespace chordal
 {
-
     ChordalGraph::ChordalGraph(Graph const& graph)
         : graph(graph)
     {
@@ -28,9 +27,23 @@ namespace chordal
             throw GraphIsNotChordal{};
     }
 
+    pair<int, int> ChordalGraph::Unpack(long long k){
+        pair<int, int> result;
+        int a = k / (n+1);
+        int b = k % (n+1);
+
+        return pair<int, int> { a-1, b-1 };
+    };
+
+    long long ChordalGraph::Pack(int a, int b)
+    {
+        if(a > b)
+            swap(a,b);
+        return (long long)(a+1) * (n+1) + b + 1;
+    };
+
     int ChordalGraph::FvsCount()
     {
-
         for(int i=0; i < n; i++)
         {
             parent[i] = numeric_limits<int>::max();
@@ -44,54 +57,12 @@ namespace chordal
             if(parent[i] == numeric_limits<int>::max())
                 parent[i] = -1;
         }
-
         for(int i=0; i<n; i++)
         {
-            int k = parent[i];
-            if(k == -1)
-                continue;
-            v_not_in_parent[i] = v[i];
-            for(int x : v[k])
-                v_not_in_parent[i].erase(x);
-            v_not_in_parent[i].insert(-1);
+            for(int x : graph_reordered[i])
+            if(parent[x] == i)
+                children_tab[i].push_back(x);
         }
-
-        auto unpack  = [&](int k){
-            pair<int, int> result;
-            int a = k / (n+1);
-            int b = k % (n+1);
-
-            return pair<int, int> { a-1, b-1 };
-        };
-
-        auto pack = [&](int a, int b)
-        {
-            if(a > b)
-                swap(a,b);
-            return (a+1) * (n+1) + b + 1;
-        };
-
-        auto get_result_lam = [&](int k, int a, int b) {
-            if(v[k].count(a) && v[k].count(b))
-                return results[k][pack(a, b)] - 2;
-            if( (!v[k].count(a)) && (!v[k].count(b)))
-            {
-                int tmp = 0;
-                for(int x : v_not_in_parent[k])
-                for(int y : v_not_in_parent[k])
-                    tmp = max(tmp, results[k][pack(x, y)]);
-                return tmp;
-            }
-            assert(v[k].count(a) ||v[k].count(b));
-
-            if(v[k].count(b))
-                a = b;
-
-            int tmp = 0;
-            for(int x : v_not_in_parent[k])
-                tmp = max(tmp, results[k][pack(a, x)]);
-            return tmp - 1;
-        };
 
         for(int i=0; i<n; i++)
         {
@@ -99,95 +70,115 @@ namespace chordal
             candidates.push_back(-1);
             for(int x : v[i])
                 candidates.push_back(x);
-            
-            vector<int> & children = children_tab[i];
-            for(int x : graph_reordered[i])
-                if(parent[x] == i)
-                    children.push_back(x);
+
+            //calculate part
+            for(int x : candidates)
+            for(int y : candidates)
+            {
+                if(x == y && x != -1) continue;
+                int result = 0;
+                if(x != -1) ++result;
+                if(y != -1) ++result;
+
+                for(int c : children_tab[i])
+                {
+                    int x2 = x; int y2 = y;
+                    if(!v[c].count(x)) x2 = -1;
+                    if(!v[c].count(y)) y2 = -1;
+
+                    result += results[c][Pack(x2, y2)];
+                    if(x2 != -1) --result;
+                    if(y2 != -1) --result; 
+                }
+
+                results[i][Pack(x, y)] = result;
+            }
+
+            //update part
+            if(i == n-1)
+                continue;
+
+            int p = parent[i];
             
             for(int x : candidates)
             for(int y : candidates)
             {
-                if(x != -1 && x == y) continue;
-                int tmp = 0;
-                if(x != -1)
-                    tmp++;
-                if(y != -1 && x!=y)
-                    tmp++;
+                int x2 = x;
+                int y2 = y;
+                if(!v[p].count(x))
+                    x2 = -1;
+                if(!v[p].count(y))
+                    y2 = -1;
                 
-                for(int child : children)
-                    tmp += get_result_lam(child, x, y);
-
-                results[i][pack(x, y)] = tmp;
+                long long p1 = Pack(x, y);
+                long long p2 = Pack(x2, y2);
+                results[i][p2] = max(results[i][p2], results[i][p1]);
             }
-
         }
+
         int result = 0;
         for(auto const& p : results[n-1])
             result = max(p.second, result);
-
+        
         return n - result;
     }
 
     void ChordalGraph::RecoverResult(int k, int x, int y, unordered_set<int> & result)
     {
-        // cerr << k << endl;
-        auto unpack  = [&](int k){
-            pair<int, int> result;
-            int a = k / (n+1);
-            int b = k % (n+1);
-
-            return pair<int, int> { a-1, b-1 };
-        };
-
-        auto pack = [&](int a, int b)
-        {
-            if(a > b)
-                swap(a,b);
-            return (a+1) * (n+1) + b + 1;
-        };
-
-        auto recover_pair_fun = [&](int k, int a, int b) {
-            if(v[k].count(a) && v[k].count(b))
-                return pair<int, int>{a, b};
-            if( (!v[k].count(a)) && (!v[k].count(b)))
-            {
-                int tmp = 0;
-                pair<int, int> best{-1, -1};
-                for(int x : v_not_in_parent[k])
-                for(int y : v_not_in_parent[k])
-                {
-                    if(results[k][pack(x, y)] >= tmp)
-                    {
-                        tmp = results[k][pack(x, y)];
-                        best = {x, y};
-                    }
-                }
-                return best;
-            }
-            assert(v[k].count(a) ||v[k].count(b));
-
-            if(v[k].count(b))
-                a = b;
-
-            int tmp = 0;
-            pair<int, int> best{-1, -1};
-            for(int x : v_not_in_parent[k])
-            {
-                if(results[k][pack(a, x)] >= tmp)
-                {
-                    tmp = results[k][pack(a, x)];
-                    best = {a, x};
-                }
-            }
-            return best;
-        };
         result.insert(x);
         result.insert(y);
         
+        auto recover_pair_fun = [&](int k, int a, int b) {
+            int best_result = results[k][Pack(a,b)];
+            if(a > b) swap(a,b);
+            // for all pairs if one reduces to {a,b}
+
+            pair<int, int> result {-1, -1};
+            for(auto pai : results[k])
+            {
+                if(pai.second != best_result) 
+                    continue;
+
+                auto candidate = Unpack(pai.first);
+                int x = candidate.first;
+                int y = candidate.second;
+
+                if(!v[parent[k]].count(x))
+                    x = -1;
+                if(!v[parent[k]].count(y))
+                    y = -1;
+                if(x > y) swap(x,y);
+                    
+                if(a == x && b == y)
+                {
+                    int n0r = 0;
+                    if(result.first != -1)
+                        n0r++;
+                    if(result.second != -1)
+                        n0r++;
+                    
+                    int n0c = 0;
+                    if(candidate.first != -1)
+                        n0c++;
+                    if(candidate.second != -1)
+                        n0c++;
+                    if(n0c > n0r)
+                        result = candidate;
+                }
+            }
+            return result;
+        };
+        
         for(int child : children_tab[k])
         {
-            auto p = recover_pair_fun(child, x, y);
+            int x2 = x;
+            int y2 = y;
+            if(!v[child].count(x))
+                x2 = -1;
+            if(!v[child].count(y))
+                y2 = -1;
+            
+            auto p = recover_pair_fun(child, x2, y2);
             RecoverResult(child, p.first, p.second, result);
         }
     }
@@ -234,26 +225,17 @@ namespace chordal
     unordered_set<int> ChordalGraph::Fvs()
     {
         unordered_set<int> result;
-        
         int score = FvsCount();
         
         pair<int, int> best;
         int tmp = 0;
-
-        auto unpack  = [&](int k){
-            pair<int, int> result;
-            int a = k / (n+1);
-            int b = k % (n+1);
-
-            return pair<int, int> { a-1, b-1 };
-        };
-
+        
         for(auto const& p : results[n-1])
         {
             if(p.second >= tmp)
             {
                 tmp = p.second;
-                best = unpack(p.first);
+                best = Unpack(p.first);
             }
         }
 
@@ -317,6 +299,4 @@ namespace chordal
         reverse(result.begin(), result.end());
         return result;
     }
-
-
 }

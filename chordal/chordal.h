@@ -51,17 +51,15 @@ private:
     int GetFirst(list< set_timestamp_pair> & sequence);
     bool IsChordal();
 
-    unordered_map<int,int> results[MAXN];
-    
+    unordered_map<long long,int> results[MAXN];
     unordered_set<int> v[MAXN];
-    unordered_set<int> v_not_in_parent[MAXN];
     vector<int> children_tab[MAXN];
 
     void RecoverResult(int k, int x, int y, unordered_set<int> & result);
     
     int parent[MAXN];
-    
-
+    long long Pack(int a, int b);
+    pair<int, int> Unpack(long long val);
 };
 
 }
