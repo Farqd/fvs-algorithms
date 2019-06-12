@@ -2,38 +2,109 @@
 #include "util/util.h"
 #include "util/brute.h"
 #include <chrono>
+#include <functional>
 
 using namespace chordal;
 
-Graph generateChordal(int n)
+/* Chordal graph generation based on: https://link.springer.com/chapter/10.1007/978-3-319-57586-5_37*/
+
+Graph generateTree(int const n)
 {
     Graph result;
+
     result.resize(n);
-
-    int k = 0;
-    while(true)
+    for(int i=1; i<n; i++)
     {
-        if(k == n) break;
-        int next_clique =  (rand() % min(100, n-k)) + 1;
-        
-        for(int i=k; i <k+next_clique; i++)
-        for(int j=i+1; j <k+next_clique; j++)
-        {
-            result[i].push_back(j);
-            result[j].push_back(i);
-        }
-
-        if(k!=0)
-        {
-            int tmp = rand() % k;
-            result[k].push_back(tmp);
-            result[tmp].push_back(k);
-        }
-
-        k += next_clique;
+        int k = rand() % i;
+        result[k].push_back(i);
+        result[i].push_back(k);
     }
 
     return result;
+}
+
+unordered_set<int> generateSubtree(Graph const& graph, int const k)
+{
+    // k = size of three
+    unordered_set<int> result;
+    vector<int> vertices;
+
+    int t_0 = rand() % graph.size();
+    result.insert(t_0);
+    vertices.push_back(t_0);
+
+    for(int i=1; i<k; i++)
+    {
+        while(true)
+        {
+            int u = rand() % vertices.size(); u = vertices[u];
+            vector<int> options;
+            for(int x : graph[u])
+                if(!result.count(x))
+                    options.push_back(x);
+            if(options.size() == 0) continue;
+            int v = rand() % options.size(); v = options[v];
+            assert(result.count(v) == 0);
+            result.insert(v);
+            vertices.push_back(v);
+            break;
+        }
+    }
+
+    return result;
+}
+
+vector<unordered_set<int> > generateSubtrees(Graph const& graph, int const k)
+{
+    vector<unordered_set<int> > result;
+
+    for(int i=0; i<(int)graph.size(); i++)
+    {
+        int k1 = rand() % (std::min(2*k - 1, (int)graph.size()));
+        result.push_back(generateSubtree(graph, k1 + 1));
+    }
+
+    return result;
+}
+
+Graph generateChordal(int const n, int const k)
+{
+    Graph result;
+    result.resize(n);
+    auto const& tree = generateTree(n);
+    auto const& trees = generateSubtrees(tree, k);
+    for(int i=0; i<(int)trees.size(); i++)
+    for(int j=i+1; j<(int)trees.size(); j++)
+    {
+        for(auto const& x : trees[i])
+        {
+            if(trees[j].count(x))
+            {
+                result[i].push_back(j);
+                result[j].push_back(i);
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+bool isConnected(Graph const& graph)
+{
+    vector<int> visited; visited.resize(graph.size());
+
+    std::function<void(Graph const&,int, vector<int>&)> dfs;
+    dfs = [&](Graph const& g, int k, vector<int> & v){
+        if(v[k] == 1) return;
+        v[k] = 1;
+        for(int x : g[k])
+            dfs(g, x, v);
+    };
+
+    dfs(graph, 0, visited);
+    for(int i=0; i<(int)graph.size(); i++)
+        if(!visited[i]) return false;
+    return true;
 }
 
 int edges(Graph const& g)
@@ -47,8 +118,17 @@ int edges(Graph const& g)
 int main()
 {
     srand(time(0));
-    const int N = 10000;
-    auto graph = generateChordal(N);
+    int N = 200; 
+    int K = 50;
+
+    cin >> N >> K;
+
+    auto graph = generateChordal(N, K);
+    while(!isConnected(graph))
+    {
+        cerr << "NOT CONNECTED" << endl;
+        graph = generateChordal(N, K);
+    }
 
     cerr << "N= " << N << endl;
     cerr << "edges= " << edges(graph) << endl;
