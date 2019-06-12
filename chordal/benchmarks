@@ -1,93 +1,87 @@
-interval:
+chordal:
 
 build with '-O3', '-std=c++17',
 gcc version 7.3.0 
 Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
 
 
-Chordal graph is a "tree" of cliques.
-I will create a clique of random size <= 5 and connect it to random previous vertex, until i achieve size N.
-
-K = 10;
+Chordal graph generation based on: https://link.springer.com/chapter/10.1007/978-3-319-57586-5_37
 
 N= 200
-edges= 1314
-finished computation at Thu May 23 17:09:32 2019
-elapsed time: 0.0108332s
-FVS= 131
-
-N= 1000
-edges= 6666
-finished computation at Thu May 23 17:10:04 2019
-elapsed time: 0.0611947s
-FVS= 674
-
-
-N= 5000
-edges= 31656
-finished computation at Thu May 23 17:10:18 2019
-elapsed time: 0.281142s
-FVS= 3249
-
-N= 10000
-edges= 62732
-finished computation at Thu May 23 17:10:34 2019
-elapsed time: 0.455501s
-FVS= 6485
-
-
-K=50
-
+K= 8
+edges= 6314
+finished computation at Wed Jun 12 16:57:16 2019
+elapsed time: 0.14123s
+FVS= 143
 N= 200
-edges= 6550
-finished computation at Thu May 23 17:14:02 2019
-elapsed time: 0.153762s
-FVS= 180
-
-
-N= 1000
-edges= 30896
-finished computation at Thu May 23 17:13:45 2019
-elapsed time: 0.459978s
-FVS= 916
-
-
-N= 5000
-edges= 157920
-finished computation at Thu May 23 17:13:32 2019
-elapsed time: 1.96147s
-FVS= 4586
-
-
-N= 10000
-edges= 324814
-finished computation at Thu May 23 17:12:50 2019
-elapsed time: 4.04407s
-FVS= 9209
-
-
-K=100
-
+K= 15
+edges= 16502
+finished computation at Wed Jun 12 16:57:17 2019
+elapsed time: 0.742316s
+FVS= 163
 N= 200
-edges= 11010
-finished computation at Thu May 23 17:14:52 2019
-elapsed time: 0.283115s
+K= 30
+edges= 25914
+finished computation at Wed Jun 12 16:57:19 2019
+elapsed time: 1.75685s
+FVS= 176
+N= 200
+K= 50
+edges= 31942
+finished computation at Wed Jun 12 16:57:21 2019
+elapsed time: 2.42341s
 FVS= 182
-
+N= 500
+K= 8
+edges= 16866
+finished computation at Wed Jun 12 16:57:22 2019
+elapsed time: 0.448364s
+FVS= 347
+N= 500
+K= 15
+edges= 33566
+finished computation at Wed Jun 12 16:57:23 2019
+elapsed time: 1.28069s
+FVS= 393
+N= 500
+K= 30
+edges= 93692
+finished computation at Wed Jun 12 16:57:32 2019
+elapsed time: 8.80151s
+FVS= 428
+N= 500
+K= 50
+edges= 118712
+finished computation at Wed Jun 12 16:57:45 2019
+elapsed time: 13.1149s
+FVS= 444
 N= 1000
-edges= 72598
-finished computation at Thu May 23 17:15:26 2019
-elapsed time: 1.75602s
-FVS= 961
-
-N= 5000
-edges= 320578
-finished computation at Thu May 23 17:15:46 2019
-elapsed time: 6.87024s
-FVS= 4783
-
+K= 8
+edges= 33374
+finished computation at Wed Jun 12 16:57:46 2019
+elapsed time: 0.759135s
+FVS= 720
+N= 1000
+K= 15
+edges= 82464
+finished computation at Wed Jun 12 16:57:51 2019
+elapsed time: 3.88039s
+FVS= 786
+N= 1000
+K= 30
+edges= 196410
+finished computation at Wed Jun 12 16:58:10 2019
+elapsed time: 19.59s
+FVS= 863
 N= 10000
-edges= 670044
-finished computation at Thu May 23 17:16:13 2019
-elapsed time: 14.4821s
-FVS= 9591
+K= 8
+edges= 347218
+finished computation at Wed Jun 12 17:01:17 2019
+elapsed time: 7.77184s
+FVS= 7134
+N= 10000
+K= 15
+edges= 958886
+finished computation at Wed Jun 12 17:02:32 2019
+elapsed time: 55.4727s
+FVS= 8001
