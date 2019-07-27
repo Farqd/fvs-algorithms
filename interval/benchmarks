@@ -9,34 +9,27 @@ Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
 Generated graphs had ~n^2/3 edges, it doesn't go into time complexity
 With sorting
 
-N = 100000
-FVS= 99423
-finished computation at Thu May 23 15:11:07 2019
-elapsed time: 0.151752s
+DENSE
+100000 0.186887
+300000 0.467895
+500000 0.821296
+700000 1.16731
+1000000 1.72374
+2000000 3.67596
+3000000 6.04385
+4000000 8.23493
+5000000 10.5397
 
-N = 1000000
-FVS= 998119
-finished computation at Thu May 23 15:10:51 2019
-elapsed time: 1.87077s
-
-N = 5000000
-FVS= 4995780
-finished computation at Thu May 23 15:11:57 2019
-elapsed time: 9.48909s
 
 O(N) edges
 
-N = 100000
-FVS= 15664
-finished computation at Thu May 23 15:14:50 2019
-elapsed time: 0.141572s
-
-N = 1000000
-FVS= 157320
-finished computation at Thu May 23 15:15:10 2019
-elapsed time: 1.06427s
-
-N = 5000000
-FVS= 786686
-finished computation at Thu May 23 15:15:31 2019
-elapsed time: 6.11444s
+SPARSE
+100000 0.107614
+300000 0.314214
+500000 0.492846
+700000 0.720496
+1000000 1.02673
+2000000 2.36367
+3000000 3.66219
+4000000 4.55079
+5000000 6.01038

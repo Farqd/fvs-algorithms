@@ -7,63 +7,37 @@ Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
 
 random permutation, ~N^2 EDGES
 
-
-N= 100
-edges= 4952
-finished computation at Thu May 23 17:28:52 2019
-elapsed time: 0.180966s
-FVS= 75
-
-N= 200
-edges= 18768
-finished computation at Thu May 23 17:32:00 2019
-elapsed time: 1.55079s
-FVS= 162
-
-N= 300
-edges= 45128
-finished computation at Thu May 23 17:32:32 2019
-elapsed time: 5.17964s
-FVS= 257
-
-
-N= 500
-edges= 130932
-finished computation at Thu May 23 17:31:52 2019
-elapsed time: 23.8795s
-FVS= 434
-
+DENSE
+100 0.181923
+150 0.529461
+200 1.28348
+250 2.70871
+300 4.50083
+350 8.00857
+400 10.8574
+450 15.6379
+500 21.4699
 
 sparse
 
 
-N= 100
-edges= 964
-finished computation at Thu May 23 17:34:58 2019
-elapsed time: 0.0306792s
-FVS= 14
-
-N= 200
-edges= 3602
-finished computation at Thu May 23 17:35:05 2019
-elapsed time: 0.217544s
-FVS= 23
-
-
-N= 300
-edges= 6284
-finished computation at Thu May 23 17:33:47 2019
-elapsed time: 0.572957s
-FVS= 30
-
-N= 500
-edges= 11666
-finished computation at Thu May 23 17:35:27 2019
-elapsed time: 1.7023s
-FVS= 36
-
-N= 1000
-edges= 45940
-finished computation at Thu May 23 17:36:04 2019
-elapsed time: 16.112s
-FVS= 56
+SPARSE
+100 0.0697258
+150 0.117174
+200 0.243098
+250 0.448327
+300 0.543005
+350 0.917606
+400 1.12375
+450 1.74533
+500 2.00243
+550 3.50815
+600 3.37174
+650 5.1231
+700 3.99799
+750 4.23218
+800 8.65584
+850 5.84932
+900 11.237
+950 10.214
+1000 13.054

@@ -45,25 +45,28 @@ int edges(Graph const& g)
 int main()
 {
     srand(time(0));
-    const int N = 1000;
+    // vector<int> sizes_N = {100, 150, 200, 250, 300, 350, 400, 450, 500};
+    cout << "SPARSE" << endl;
+    for(int N = 100; N <= 1000; N+=50)
+    {
+        auto perm = GenRandSparse(N);
+            // cerr << "N= " << N << endl;
+        auto graph_ = PermutationToGraph(perm);
+        // cerr << "edges= " << edges(graph_) << endl;
 
-    auto perm = GenRandSparse(N);
-        cerr << "N= " << N << endl;
-    auto graph_ = PermutationToGraph(perm);
-    cerr << "edges= " << edges(graph_) << endl;
+        auto start = std::chrono::system_clock::now();
 
-    auto start = std::chrono::system_clock::now();
+        PermutationGraph gr{perm};
+        auto fvs = gr.Fvs();
 
-    PermutationGraph gr{perm};
-    auto fvs = gr.Fvs();
-
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
- 
-    std::cout << "finished computation at " << std::ctime(&end_time)
-              << "elapsed time: " << elapsed_seconds.count() << "s\n";
-    cerr <<"FVS= " << fvs.size() << endl;
-    assert(util::IsFvs(graph_, fvs));
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+        cout << N << " " << elapsed_seconds.count() << endl;
+        // std::cout << "finished computation at " << std::ctime(&end_time)
+        //           << "elapsed time: " << elapsed_seconds.count() << "s\n";
+        // cerr <<"FVS= " << fvs.size() << endl;
+        assert(util::IsFvs(graph_, fvs));
+    }
 }
   

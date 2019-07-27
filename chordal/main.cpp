@@ -121,17 +121,22 @@ int main()
     int N = 200; 
     int K = 50;
 
+    while(true)
+    {
+
     cin >> N >> K;
+    if(N==-1) break;
 
     auto graph = generateChordal(N, K);
     while(!isConnected(graph))
     {
-        cerr << "NOT CONNECTED" << endl;
+        // cout << "NOT CONNECTED" << endl;
         graph = generateChordal(N, K);
     }
 
-    cerr << "N= " << N << endl;
-    cerr << "edges= " << edges(graph) << endl;
+    // cout << "N= " << N << endl;
+    // cout << "K= " << K << endl;
+    int edg = edges(graph);
 
     auto start = std::chrono::system_clock::now();
     ChordalGraph cg {graph};
@@ -142,10 +147,11 @@ int main()
     std::chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
  
-    std::cout << "finished computation at " << std::ctime(&end_time)
-              << "elapsed time: " << elapsed_seconds.count() << "s\n";
-    cerr <<"FVS= " << fvs.size() << endl;
+    // std::cout << "finished computation at " << std::ctime(&end_time)
+    //           << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    std::cout << N << "  " << K << " " << edg << " " << elapsed_seconds.count() << endl;
     assert(util::IsFvs(graph, fvs));
+    }
 
 
 }
